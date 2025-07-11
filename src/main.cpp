@@ -3,7 +3,7 @@
 
 #include "readwav.hpp"
 
-constexpr size_t nums = 30;
+constexpr size_t nums = 10;
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
