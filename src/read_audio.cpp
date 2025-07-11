@@ -1,5 +1,6 @@
 #include <array>
 #include <cstddef>
+#include <cstring>
 #include <fstream>
 
 constexpr std::array<char, 4> riff{'R', 'I', 'F', 'F'};
@@ -14,7 +15,9 @@ void read_audio(const std::string& filename) {
 
     std::array<std::byte, 4> riffArray{};
 
-    wavFile.read(reinterpret_cast<char*>(riffArray.data()), riffArray.size());
+    std::array<char, riffArray.size()> temp_buffer{};
+    wavFile.read(temp_buffer.data(), riffArray.size());
+    std::memcpy(riffArray.data(), temp_buffer.data(), riffArray.size());
 
 
     for (size_t i = 0; i < riffArray.size(); ++i) {
