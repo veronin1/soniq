@@ -37,5 +37,6 @@ struct WavFile {
 WavFile read_wav(const std::string& filename);
 std::vector<int16_t> convertBytes(WavHeader header,
                                   std::vector<std::byte>& soundData);
+void printHeader(WavHeader& header);
 
 #endif
