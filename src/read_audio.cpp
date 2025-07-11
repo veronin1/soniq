@@ -15,9 +15,9 @@ void read_audio(const std::string& filename) {
 
     // Read first 4 bytes and verify RIFF header
     std::array<std::byte, expectedRiff.size()> fileHeaderRiff{};
-    std::array<char, expectedRiff.size()> tempBuffer{};
-    wavFile.read(tempBuffer.data(), expectedRiff.size());
-    std::memcpy(fileHeaderRiff.data(), tempBuffer.data(), expectedRiff.size());
+    std::array<char, expectedRiff.size()> riffBuffer{};
+    wavFile.read(riffBuffer.data(), expectedRiff.size());
+    std::memcpy(fileHeaderRiff.data(), riffBuffer.data(), expectedRiff.size());
 
 
     for (size_t i = 0; i < expectedRiff.size(); ++i) {
