@@ -9,7 +9,6 @@
 #include <vector>
 
 constexpr size_t bits16perSample = 16;
-constexpr size_t nums = 30;
 
 // Struct for WavHeader
 #pragma pack(push, 1)
