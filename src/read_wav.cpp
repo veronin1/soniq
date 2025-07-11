@@ -58,7 +58,7 @@ std::vector<int16_t> convertBytes(WavHeader header,
       const std::byte byte2 = soundData[i + 1];
 
       const auto sample = static_cast<int16_t>(
-          (static_cast<uint8_t>(byte1) << 8) | static_cast<uint8_t>(byte2));
+          (static_cast<uint8_t>(byte2) << 8) | static_cast<uint8_t>(byte1));
 
       samples.push_back(sample);
     }
