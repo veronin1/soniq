@@ -30,9 +30,13 @@ void read_wav(const std::string& filename) {
     throw std::runtime_error("WAV file contains no sound data");
   }
 
+  // read samples into soundData vector
   std::vector<char> soundDataBuffer(dataSize);
   wavFile.read(soundDataBuffer.data(), dataSize);
 
   std::vector<std::byte> soundData(dataSize);
-  memcpy(soundData.data(), soundDataBuffer.data(), soundDataBuffer.size());
+  soundData.reserve(dataSize);
+  for (char sample : soundDataBuffer) {
+    soundData.push_back(static_cast<std::byte>(sample));
+  }
 }
