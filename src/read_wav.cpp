@@ -80,16 +80,29 @@ void printHeader(WavHeader& header) {
   std::cout << "Subchunk1 ID: "
             << std::string(header.fmt.begin(), header.fmt.end()) << "\n";
   std::cout << "Subchunk1 Size: " << header.subchunk1Size << "\n";
-  std::cout << "Audio Format: " << header.audioFormat
-            << (header.audioFormat == 1   ? " (PCM)"
-                : header.audioFormat == 3 ? " (IEEE Float)"
-                                          : " (Unknown)")
-            << "\n";
-  std::cout << "Channels: " << header.numChannels
-            << (header.numChannels == 1   ? " (Mono)"
-                : header.numChannels == 2 ? " (Stereo)"
-                                          : "")
-            << "\n";
+
+  // Audio Format
+  std::cout << "Audio Format: " << header.audioFormat;
+  if (header.audioFormat == 1) {
+    std::cout << " (PCM)";
+  } else if (header.audioFormat == 3) {
+    std::cout << " (IEEE Float)";
+  } else {
+    std::cout << " (Unknown)";
+  }
+  std::cout << "\n";
+
+  // Channels
+  std::cout << "Channels: " << header.numChannels;
+  if (header.numChannels == 1) {
+    std::cout << " (Mono)";
+  } else if (header.numChannels == 2) {
+    std::cout << " (Stereo)";
+  } else {
+    std::cout << "";
+  }
+  std::cout << "\n";
+
   std::cout << "Sample Rate: " << header.sampleRate << " Hz\n";
   std::cout << "Byte Rate: " << header.byteRate << "\n";
   std::cout << "Block Align: " << header.blockAlign << "\n";
