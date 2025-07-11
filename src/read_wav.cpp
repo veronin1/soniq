@@ -12,18 +12,12 @@ void read_wav(const std::string& filename) {
     throw std::ios_base::failure("Failed to open file: " + filename);
   }
 
-  // Read first 4 bytes and verify RIFF header
-  std::array<std::byte, expectedRiff.size()> fileHeaderRiff{};
-  std::array<char, expectedRiff.size()> riffBuffer{};
-  wavFile.read(riffBuffer.data(), expectedRiff.size());
-  std::memcpy(fileHeaderRiff.data(), riffBuffer.data(), expectedRiff.size());
+  std::array<char, wavHeaderSize> wavHeader{};
+
+  wavFile.read(wavHeader.data(), wavHeaderSize);
 
   if (!std::equal(expectedRiff.begin(), expectedRiff.end(),
-                  riffBuffer.begin())) {
+                  wavHeader.begin())) {
     throw std::runtime_error("File is not a valid WAV file (missing RIFF)");
   }
-
-  // Read first 44 bytes for WAV header
-  std::array<char, wavHeaderSize> wavHeader{};
-  wavFile.read(wavHeader.data(), wavHeaderSize);
 }
