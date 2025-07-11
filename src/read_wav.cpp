@@ -6,7 +6,7 @@
 constexpr std::array<char, 4> expectedRiff{'R', 'I', 'F', 'F'};
 constexpr size_t wavHeaderSize = 44;
 
-void read_audio(const std::string& filename) {
+void read_wav(const std::string& filename) {
   std::ifstream wavFile(filename, std::ios::binary);
   if (!wavFile) {
     throw std::ios_base::failure("Failed to open file: " + filename);
