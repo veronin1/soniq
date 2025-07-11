@@ -14,13 +14,13 @@ void read_audio(const std::string& filename) {
     }
 
     // Read first 4 bytes and verify RIFF header
-    std::array<std::byte, 4> fileHeaderRiff{};
-    std::array<char, fileHeaderRiff.size()> temp_buffer{};
-    wavFile.read(temp_buffer.data(), fileHeaderRiff.size());
-    std::memcpy(fileHeaderRiff.data(), temp_buffer.data(), fileHeaderRiff.size());
+    std::array<std::byte, expectedRiff.size()> fileHeaderRiff{};
+    std::array<char, expectedRiff.size()> tempBuffer{};
+    wavFile.read(tempBuffer.data(), expectedRiff.size());
+    std::memcpy(fileHeaderRiff.data(), tempBuffer.data(), expectedRiff.size());
 
 
-    for (size_t i = 0; i < fileHeaderRiff.size(); ++i) {
+    for (size_t i = 0; i < expectedRiff.size(); ++i) {
         if (static_cast<char>(fileHeaderRiff[i]) != expectedRiff[i]) {
             throw std::runtime_error("Input file is not a valid WAV file.");
         }
