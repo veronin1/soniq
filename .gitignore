@@ -62,6 +62,7 @@ html/
 .vscode/c_cpp_properties.json
 *.code-workspace
 .history
+.vscode/
 
 ################################
 ###########   VS    ############
