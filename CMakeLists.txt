@@ -31,5 +31,4 @@ target_link_libraries(soniq PRIVATE
 )
 
 set_target_properties(soniq PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
