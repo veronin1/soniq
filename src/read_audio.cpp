@@ -27,4 +27,5 @@ void read_audio(const std::string& filename) {
     }
 
     std::array<char, wavHeaderSize> wavHeader{};
+    wavFile.read(wavHeader.data(), wavHeaderSize);
 }
