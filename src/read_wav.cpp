@@ -3,34 +3,11 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
-constexpr std::array<char, 4> expectedRiff{'R', 'I', 'F', 'F'};
-
-// Struct for WavHeader
-#pragma pack(push, 1)
-struct WavHeader {
-  std::array<char, 4> riff;  // "RIFF"
-  uint32_t chunkSize;        // overall file size - 8 bytes
-  std::array<char, 4> wave;  // "WAVE"
-  std::array<char, 4> fmt;   // "fmt "
-  uint32_t subchunk1Size;    // 16 for PCM
-  uint16_t audioFormat;      // 1 = PCM, 3 = float
-  uint16_t numChannels;      // 1 = mono, 2 = stereo
-  uint32_t sampleRate;       // e.g. 44100 Hz
-  uint32_t byteRate;         // == SampleRate * NumChannels * BitsPerSample/8
-  uint16_t blockAlign;       // == NumChannels * BitsPerSample/8
-  uint16_t bitsPerSample;    // e.g. 16
-  std::array<char, 4> data;  // "data"
-  uint32_t dataSize;         // size of the sound data in bytes
-};
-#pragma pack(pop)
-
-struct WavFile {
-  WavHeader header;
-  std::vector<std::byte> soundData;
-};
+#include "readwav.hpp"
 
 WavFile read_wav(const std::string& filename) {
   std::ifstream wavFile(filename, std::ios::binary);
@@ -71,4 +48,24 @@ WavFile read_wav(const std::string& filename) {
   }
 
   return WavFile{header, std::move(soundData)};
+}
+
+// Convert bytes into 16 bit numbers
+std::vector<int16_t> convertBytes(WavHeader header,
+                                  std::vector<std::byte>& soundData) {
+  std::vector<int16_t> samples;
+  if (header.bitsPerSample == bits16perSample) {
+    samples.reserve(soundData.size() / 2);
+
+    for (size_t i = 0; i < soundData.size(); i += 2) {
+      const std::byte byte1 = soundData[i];
+      const std::byte byte2 = soundData[i + 1];
+
+      const auto sample = static_cast<int16_t>(
+          static_cast<uint8_t>(byte2) << 8 | static_cast<uint8_t>(byte1));
+
+      samples.push_back(sample);
+    }
+  }
+  return samples;
 }
