@@ -24,17 +24,14 @@ WavFile read_wav(const std::string& filename) {
   }
   std::memcpy(&header, headerBuffer.data(), sizeof(WavHeader));
 
-  if (std::memcmp(header.riff.data(), "RIFF", 4) != 0) {
-    throw std::runtime_error("File is not valid WAV file (missing 'RIFF')");
+  if (std::memcmp(header.riff.data(), "RIFF", 4) != 0 ||
+      std::memcmp(header.wave.data(), "WAVE", 4) != 0 ||
+      std::memcmp(header.fmt.data(), "fmt ", 4) != 0 ||
+      std::memcmp(header.data.data(), "data", 4) != 0) {
+    throw std::runtime_error("Invalid WAV file format");
   }
-  if (std::memcmp(header.wave.data(), "WAVE", 4) != 0) {
-    throw std::runtime_error("File is not valid WAV file (missing 'WAVE')");
-  }
-  if (std::memcmp(header.fmt.data(), "fmt ", 4) != 0) {
-    throw std::runtime_error("File is not valid WAV file (missing 'fmt ')");
-  }
-  if (std::memcmp(header.data.data(), "data", 4) != 0) {
-    throw std::runtime_error("File is not valid WAV file (missing 'data')");
+  if (header.bitsPerSample != bits16perSample) {
+    throw std::runtime_error("Only 16-bit samples are supported");
   }
 
   // read samples into soundData vector
@@ -62,7 +59,7 @@ std::vector<int16_t> convertBytes(WavHeader header,
       const std::byte byte2 = soundData[i + 1];
 
       const auto sample = static_cast<int16_t>(
-          static_cast<uint8_t>(byte2) << 8 | static_cast<uint8_t>(byte1));
+          (static_cast<uint8_t>(byte2) << 8) | static_cast<uint8_t>(byte1));
 
       samples.push_back(sample);
     }
