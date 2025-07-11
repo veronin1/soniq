@@ -27,7 +27,12 @@ struct WavHeader {
 };
 #pragma pack(pop)
 
-void read_wav(const std::string& filename) {
+struct WavFile {
+  WavHeader header;
+  std::vector<std::byte> soundData;
+};
+
+WavFile read_wav(const std::string& filename) {
   std::ifstream wavFile(filename, std::ios::binary);
   if (!wavFile) {
     throw std::ios_base::failure("Failed to open file: " + filename);
@@ -54,6 +59,7 @@ void read_wav(const std::string& filename) {
   if (std::memcmp(header.data.data(), "data", 4) != 0) {
     throw std::runtime_error("File is not valid WAV file (missing 'data')");
   }
+
   // read samples into soundData vector
   std::vector<char> soundDataBuffer(header.dataSize);
   wavFile.read(soundDataBuffer.data(), header.dataSize);
@@ -63,4 +69,6 @@ void read_wav(const std::string& filename) {
   for (char sample : soundDataBuffer) {
     soundData.push_back(static_cast<std::byte>(sample));
   }
+
+  return WavFile{header, std::move(soundData)};
 }
