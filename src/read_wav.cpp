@@ -69,6 +69,7 @@ std::vector<int16_t> convertBytes(WavHeader header,
   return samples;
 }
 
+// Print important header data
 void printHeader(WavHeader& header) {
   std::cout << "========== WAV FILE INFO ==========\n";
   std::cout << "Chunk ID: "
