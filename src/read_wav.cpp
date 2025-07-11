@@ -35,14 +35,13 @@ WavFile read_wav(const std::string& filename) {
   }
 
   // read samples into soundData vector
+  std::vector<std::byte> soundData(header.dataSize);
   std::vector<char> soundDataBuffer(header.dataSize);
   wavFile.read(soundDataBuffer.data(), header.dataSize);
-
-  std::vector<std::byte> soundData(header.dataSize);
-  soundData.reserve(header.dataSize);
-  for (char sample : soundDataBuffer) {
-    soundData.push_back(static_cast<std::byte>(sample));
+  if (!wavFile) {
+    throw std::runtime_error("Read error");
   }
+  std::memcpy(soundData.data(), soundDataBuffer.data(), header.dataSize);
 
   return WavFile{header, std::move(soundData)};
 }
@@ -59,10 +58,11 @@ std::vector<int16_t> convertBytes(WavHeader header,
       const std::byte byte2 = soundData[i + 1];
 
       const auto sample = static_cast<int16_t>(
-          (static_cast<uint8_t>(byte2) << 8) | static_cast<uint8_t>(byte1));
+          (static_cast<uint8_t>(byte1) << 8) | static_cast<uint8_t>(byte2));
 
       samples.push_back(sample);
     }
   }
+
   return samples;
 }
