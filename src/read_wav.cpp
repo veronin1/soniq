@@ -43,6 +43,8 @@ WavFile read_wav(const std::string& filename) {
   }
   std::memcpy(soundData.data(), soundDataBuffer.data(), header.dataSize);
 
+  printHeader(header);
+
   return WavFile{header, std::move(soundData)};
 }
 
@@ -65,4 +67,34 @@ std::vector<int16_t> convertBytes(WavHeader header,
   }
 
   return samples;
+}
+
+void printHeader(WavHeader& header) {
+  std::cout << "========== WAV FILE INFO ==========\n";
+  std::cout << "Chunk ID: "
+            << std::string(header.riff.begin(), header.riff.end()) << "\n";
+  std::cout << "Chunk Size: " << header.chunkSize << "\n";
+  std::cout << "Format: " << std::string(header.wave.begin(), header.wave.end())
+            << "\n";
+  std::cout << "Subchunk1 ID: "
+            << std::string(header.fmt.begin(), header.fmt.end()) << "\n";
+  std::cout << "Subchunk1 Size: " << header.subchunk1Size << "\n";
+  std::cout << "Audio Format: " << header.audioFormat
+            << (header.audioFormat == 1   ? " (PCM)"
+                : header.audioFormat == 3 ? " (IEEE Float)"
+                                          : " (Unknown)")
+            << "\n";
+  std::cout << "Channels: " << header.numChannels
+            << (header.numChannels == 1   ? " (Mono)"
+                : header.numChannels == 2 ? " (Stereo)"
+                                          : "")
+            << "\n";
+  std::cout << "Sample Rate: " << header.sampleRate << " Hz\n";
+  std::cout << "Byte Rate: " << header.byteRate << "\n";
+  std::cout << "Block Align: " << header.blockAlign << "\n";
+  std::cout << "Bits per Sample: " << header.bitsPerSample << "\n";
+  std::cout << "Subchunk2 ID: "
+            << std::string(header.data.begin(), header.data.end()) << "\n";
+  std::cout << "Subchunk2 Size (data): " << header.dataSize << " bytes\n";
+  std::cout << "===================================\n";
 }
