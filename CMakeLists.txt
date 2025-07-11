@@ -8,7 +8,7 @@ set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
 add_executable(soniq
     src/main.cpp
-    src/read_audio.cpp
+    src/read_wav.cpp
 )
 
 target_compile_options(soniq PRIVATE
@@ -24,6 +24,7 @@ target_compile_options(soniq PRIVATE
     -fstack-protector-strong
     -D_FORTIFY_SOURCE=2
     -fsanitize=address
+    -O2
 )
 
 target_link_libraries(soniq PRIVATE
