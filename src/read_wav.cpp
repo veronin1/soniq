@@ -1,8 +1,10 @@
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -70,12 +72,21 @@ std::vector<int16_t> convertBytes(WavHeader header,
 }
 
 // chunk the audio data
-std::vector<double> sampleToBlock(std::vector<int16_t>& samples) {
+std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
+  const size_t absoluteValue = 1024;
   const size_t blockSize = 1024;
   const size_t numBlocks = samples.size() / blockSize;
-  std::vector<double> buffer;
-  buffer.reserve(numBlocks * blockSize);
-  std::memcpy(buffer.data(), samples.data(), blockSize);
+  std::vector<std::vector<double>> buffer;
+
+  for (size_t i = 0; i < numBlocks; ++i) {
+    std::vector<double> block;
+    block.reserve(blockSize);
+    for (size_t j = 0; j < blockSize; ++j) {
+      int16_t sample = samples[(i * blockSize) + j];
+      block.push_back(static_cast<double>(sample) / absoluteValue);
+    }
+    buffer.push_back(std::move(block));
+  }
   return buffer;
 }
 
