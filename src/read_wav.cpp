@@ -1,10 +1,8 @@
-#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
-#include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -88,6 +86,16 @@ std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
     buffer.push_back(std::move(block));
   }
   return buffer;
+}
+
+std::vector<std::complex<double>> fastFourierTransform(
+    std::vector<double>& sample) {}
+
+int main() {
+  WavFile wav = read_wav("../sound/sound/file_example_WAV_10MG.wav");
+
+  std::vector<int16_t> samples = convertBytes(wav.header, wav.soundData);
+  std::vector<std::vector<double>> sampleBlocks = sampleToBlock(samples);
 }
 
 // Print important header data
