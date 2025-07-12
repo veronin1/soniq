@@ -96,6 +96,8 @@ int main() {
 
   std::vector<int16_t> samples = convertBytes(wav.header, wav.soundData);
   std::vector<std::vector<double>> sampleBlocks = sampleToBlock(samples);
+  std::vector<std::complex<double>> fftSample =
+      fastFourierTransform(sampleBlocks[0]);
 }
 
 // Print important header data
