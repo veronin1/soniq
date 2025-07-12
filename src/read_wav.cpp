@@ -69,6 +69,16 @@ std::vector<int16_t> convertBytes(WavHeader header,
   return samples;
 }
 
+// chunk the audio data
+std::vector<double> sampleToBlock(std::vector<int16_t>& samples) {
+  const size_t blockSize = 1024;
+  const size_t numBlocks = samples.size() / blockSize;
+  std::vector<double> buffer;
+  buffer.reserve(numBlocks * blockSize);
+  std::memcpy(buffer.data(), samples.data(), blockSize);
+  return buffer;
+}
+
 // Print important header data
 void printHeader(WavHeader& header) {
   std::cout << "========== WAV FILE INFO ==========\n";
