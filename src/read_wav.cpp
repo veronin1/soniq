@@ -91,7 +91,7 @@ std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
 }
 
 std::vector<std::complex<double>> discreteFourierTransform(
-    std::vector<double>& sample) {
+    const std::vector<double>& sample) {
   const size_t frequencyBin = 5;
 
   std::vector<std::complex<double>> dftResult;
@@ -109,6 +109,19 @@ std::vector<std::complex<double>> discreteFourierTransform(
     }
   }
   return dftResult;
+}
+
+// calculate magnititude
+double dftToMagntide(const std::vector<std::complex<double>>& dftResult) {
+  // magntitude = sqrt(real, pow2 + imaginary number, pow 2)
+  double magnitude = 0.0;
+
+  for (const auto& complexNumber : dftResult) {
+    magnitude += std::sqrt(std::pow(complexNumber.real(), 2) +
+                           std::pow(complexNumber.imag(), 2));
+  }
+
+  return magnitude;
 }
 
 /*
