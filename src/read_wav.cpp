@@ -100,13 +100,17 @@ std::vector<std::complex<double>> discreteFourierTransform(
   for (int i = 0; i < sample.size(); i++) {
     dftResult[i] = 0;
     for (int j = 0; j < sample.size(); j++) {
+      // for my own wellbeing:
+      // the complex is sample[n] * cos(angle), sample[n] * sin(angle)
       double angle = (2 * M_PI) * i * j / (double)sample.size();
-      std::complex<double> horizontalResult = (sample[j] * cos(angle));
-      std::complex<double> verticalResult = (sample[j] * sin(angle));
-      dftResult[i] += verticalResult + horizontalResult;
+      std::complex<double> contribution(sample[j] * cos(angle),
+                                        -sample[j] * sin(angle));
+      dftResult[i] += contribution;
     }
   }
+  return dftResult;
 }
+
 /*
 std::vector<std::complex<double>> fastFourierTransform(
     std::vector<double>& sample) {
@@ -122,12 +126,25 @@ std::vector<std::complex<double>> fastFourierTransform(
   */
 
 int main() {
-  WavFile wav = read_wav("../sound/sound/file_example_WAV_10MG.wav");
+  // Read WAV file
+  WavFile wav = read_wav("../sound/file_example_WAV_10MG.wav");
 
+  // Convert raw bytes to 16-bit samples
   std::vector<int16_t> samples = convertBytes(wav.header, wav.soundData);
+
+  // Split samples into blocks of 1024 samples (or smaller depending on file)
   std::vector<std::vector<double>> sampleBlocks = sampleToBlock(samples);
-  std::vector<std::complex<double>> fftSample =
-      fastFourierTransform(sampleBlocks[0]);
+
+  if (sampleBlocks.empty()) {
+    std::cerr << "No sample blocks found!\n";
+    return 1;
+  }
+
+  // Run DFT on the first block
+  std::vector<std::complex<double>> dftResult =
+      discreteFourierTransform(sampleBlocks[0]);
+
+  return 0;
 }
 
 // Print important header data
