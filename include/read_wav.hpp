@@ -1,5 +1,5 @@
-#ifndef READWAV_HPP
-#define READWAV_HPP
+#ifndef READ_WAV_HPP
+#define READ_WAV_HPP
 
 #include <array>
 #include <cstddef>
