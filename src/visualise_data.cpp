@@ -7,8 +7,6 @@ void printBars(const std::vector<double>& magnitudes) {
   double largestMagnitude = 0;
 
   for (double integer : magnitudes) {
-    if (integer > largestMagnitude) {
-      largestMagnitude = integer;
-    }
+    largestMagnitude = std::max(largestMagnitude, integer);
   }
 }
