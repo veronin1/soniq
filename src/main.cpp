@@ -1,7 +1,8 @@
 #include <exception>
 #include <iostream>
 
-#include "readwav.hpp"
+#include "audio_processing.hpp"
+#include "read_wav.hpp"
 
 constexpr size_t nums = 10;
 
