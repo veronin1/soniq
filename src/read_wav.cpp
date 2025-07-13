@@ -98,11 +98,12 @@ std::vector<std::complex<double>> discreteFourierTransform(
   dftResult.resize(sample.size());
 
   for (int i = 0; i < sample.size(); i++) {
+    dftResult[i] = 0;
     for (int j = 0; j < sample.size(); j++) {
       double angle = (2 * M_PI) * i * j / (double)sample.size();
       std::complex<double> horizontalResult = (sample[j] * cos(angle));
       std::complex<double> verticalResult = (sample[j] * sin(angle));
-      dftResult[i] = verticalResult + horizontalResult;
+      dftResult[i] += verticalResult + horizontalResult;
     }
   }
 }
