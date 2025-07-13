@@ -1,6 +1,7 @@
 #include "audio_processing.hpp"
 
 #include <cmath>
+#include <cstddef>
 
 #include "read_wav.hpp"
 
@@ -54,14 +55,15 @@ std::vector<std::complex<double>> discreteFourierTransform(
   std::vector<std::complex<double>> dftResult;
   dftResult.resize(sample.size());
 
-  for (int i = 0; i < sample.size(); i++) {
+  for (size_t i = 0; i < sample.size(); i++) {
     dftResult[i] = 0;
-    for (int j = 0; j < sample.size(); j++) {
+    for (size_t j = 0; j < sample.size(); j++) {
       // for my own wellbeing:
       // the complex is sample[n] * cos(angle), sample[n] * sin(angle)
-      double angle = (2 * M_PI) * i * j / (double)sample.size();
-      std::complex<double> contribution(sample[j] * cos(angle),
-                                        -sample[j] * sin(angle));
+      const double angle =
+          (2 * M_PI) * (double)i * (double)j / (double)sample.size();
+      const std::complex<double> contribution(sample[j] * cos(angle),
+                                              -sample[j] * sin(angle));
       dftResult[i] += contribution;
     }
   }
@@ -75,7 +77,7 @@ std::vector<double> dftToMagnitude(
   std::vector<double> magnitude;
   magnitude.resize(dftResult.size());
 
-  for (int i = 0; i < dftResult.size(); ++i) {
+  for (size_t i = 0; i < dftResult.size(); ++i) {
     magnitude[i] = std::sqrt(std::pow(dftResult[i].real(), 2) +
                              std::pow(dftResult[i].imag(), 2));
   }
