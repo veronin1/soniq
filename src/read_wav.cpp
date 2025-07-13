@@ -1,4 +1,6 @@
 #include <array>
+#include <cmath>
+#include <complex>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -80,7 +82,7 @@ std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
     std::vector<double> block;
     block.reserve(blockSize);
     for (size_t j = 0; j < blockSize; ++j) {
-      int16_t sample = samples[(i * blockSize) + j];
+      const int16_t sample = samples[(i * blockSize) + j];
       block.push_back(static_cast<double>(sample) / absoluteValue);
     }
     buffer.push_back(std::move(block));
@@ -88,11 +90,35 @@ std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
   return buffer;
 }
 
+std::vector<std::complex<double>> discreteFourierTransform(
+    std::vector<double>& sample) {
+  const size_t frequencyBin = 5;
+
+  std::vector<std::complex<double>> dftResult;
+  dftResult.resize(sample.size());
+
+  for (int i = 0; i < sample.size(); i++) {
+    for (int j = 0; j < sample.size(); j++) {
+      double angle = (2 * M_PI) * i * j / (double)sample.size();
+      std::complex<double> horizontalResult = (sample[j] * cos(angle));
+      std::complex<double> verticalResult = (sample[j] * sin(angle));
+      dftResult[i] = verticalResult + horizontalResult;
+    }
+  }
+}
+/*
 std::vector<std::complex<double>> fastFourierTransform(
     std::vector<double>& sample) {
-  std::vector<std::complex<double>> complexVector;
-  return complexVector;
+  const double DEG_TO_RAD = M_PI / 180.0;
+  const int fullCircle = 360;
+  const int numToGo = 10;
+  for (int i = 0; i < fullCircle; i += numToGo) {
+    std::cout << "Angle " << i << ": sin = " << sin(i * DEG_TO_RAD)
+              << ", cos = " << cos(i * DEG_TO_RAD) << "\n";
+  }
+
 }
+  */
 
 int main() {
   WavFile wav = read_wav("../sound/sound/file_example_WAV_10MG.wav");
