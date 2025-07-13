@@ -71,7 +71,7 @@ std::vector<int16_t> convertBytes(WavHeader header,
 
 // chunk the audio data
 std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
-  const size_t absoluteValue = 32768.0;
+  const double absoluteValue = 32768.0;
   const size_t blockSize = 1024;
   const size_t numBlocks = samples.size() / blockSize;
   std::vector<std::vector<double>> buffer;
