@@ -6,10 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_executable(soniq
     src/main.cpp
     src/read_wav.cpp
+    src/audio_processing.cpp
 )
+
+target_include_directories(soniq PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 target_compile_options(soniq PRIVATE
     -Wall
@@ -27,9 +32,7 @@ target_compile_options(soniq PRIVATE
     -O2
 )
 
-target_link_libraries(soniq PRIVATE
-    -fsanitize=address
-)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 
 set_target_properties(soniq PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
