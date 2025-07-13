@@ -3,8 +3,7 @@
 
 #include "audio_processing.hpp"
 #include "read_wav.hpp"
-
-constexpr size_t nums = 10;
+#include "visualise_data.hpp"
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -15,10 +14,14 @@ int main(int argc, char* argv[]) {
   try {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     WavFile wav = read_wav(argv[1]);
-    std::vector<int16_t> samples = convertBytes(wav.header, wav.soundData);
-    for (size_t i = 0; i < nums; ++i) {
-      std::cout << "Sample[" << i << "]: " << samples[i] << '\n';
+    auto samples = convertBytes(wav.header, wav.soundData);
+    auto blocks = sampleToBlock(samples);
+    for (const auto& block : blocks) {
+      auto dft = discreteFourierTransform(block);
+      auto mags = dftToMagnitude(dft);
+      printBars(mags);
     }
+
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << '\n';
     return 1;
