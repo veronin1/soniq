@@ -2,6 +2,10 @@
 
 soniq is a C++ program that plays a user-selected audio file with real-time sound output and displays an audio visualiser using DFT (Discrete Fourier Transform).
 
+## Demo (so far)
+
+<img src="example/first_working_example.gif" width="500" />
+
 ## Requirements
 
 -   CMake >= 3.10
