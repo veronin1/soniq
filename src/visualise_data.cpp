@@ -20,4 +20,13 @@ void printBars(const std::vector<double>& magnitudes) {
     scaled = (mag / largestMagnitude) * maxHeight;
     scaledValues.push_back(scaled);
   }
+
+  for (size_t i = 0; i < scaledValues.size(); ++i) {
+    int barLength = static_cast<int>(scaledValues[i]);
+
+    for (int j = 0; j < barLength; ++j) {
+      std::cout << '#';
+    }
+    std::cout << '\n';
+  }
 }
