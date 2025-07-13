@@ -39,5 +39,9 @@ std::vector<int16_t> convertBytes(WavHeader header,
                                   std::vector<std::byte>& soundData);
 void printHeader(WavHeader& header);
 std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples);
+std::vector<std::complex<double>> discreteFourierTransform(
+    const std::vector<double>& sample);
+std::vector<double> dftToMagntide(
+    const std::vector<std::complex<double>>& dftResult);
 
 #endif
