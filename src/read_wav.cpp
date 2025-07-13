@@ -92,8 +92,6 @@ std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
 
 std::vector<std::complex<double>> discreteFourierTransform(
     const std::vector<double>& sample) {
-  const size_t frequencyBin = 5;
-
   std::vector<std::complex<double>> dftResult;
   dftResult.resize(sample.size());
 
