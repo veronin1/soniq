@@ -114,6 +114,7 @@ std::vector<double> dftToMagntide(
     const std::vector<std::complex<double>>& dftResult) {
   // magntitude = sqrt(real, pow2 + imaginary number, pow 2)
   std::vector<double> magnitude;
+  magnitude.resize(dftResult.size());
 
   for (int i = 0; i < dftResult.size(); ++i) {
     magnitude[i] += std::sqrt(std::pow(dftResult[i].real(), 2) +
