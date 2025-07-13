@@ -117,10 +117,9 @@ std::vector<double> dftToMagntide(
   magnitude.resize(dftResult.size());
 
   for (int i = 0; i < dftResult.size(); ++i) {
-    magnitude[i] += std::sqrt(std::pow(dftResult[i].real(), 2) +
-                              std::pow(dftResult[i].imag(), 2));
+    magnitude[i] = std::sqrt(std::pow(dftResult[i].real(), 2) +
+                             std::pow(dftResult[i].imag(), 2));
   }
-
   return magnitude;
 }
 
