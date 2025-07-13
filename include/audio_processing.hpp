@@ -1,10 +1,10 @@
-#ifndef AUDIO_PROCESSSING_HPP
-#define AUDIO_PROCESSSING_HPP
+#ifndef AUDIO_PROCESSING_HPP
+#define AUDIO_PROCESSING_HPP
 
 #include <complex>
 #include <vector>
 
-#include "readwav.hpp"
+#include "read_wav.hpp"
 
 std::vector<int16_t> convertBytes(WavHeader header,
                                   std::vector<std::byte>& soundData);
