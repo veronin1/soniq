@@ -110,13 +110,14 @@ std::vector<std::complex<double>> discreteFourierTransform(
 }
 
 // calculate magnititude
-double dftToMagntide(const std::vector<std::complex<double>>& dftResult) {
+std::vector<double> dftToMagntide(
+    const std::vector<std::complex<double>>& dftResult) {
   // magntitude = sqrt(real, pow2 + imaginary number, pow 2)
-  double magnitude = 0.0;
+  std::vector<double> magnitude;
 
-  for (const auto& complexNumber : dftResult) {
-    magnitude += std::sqrt(std::pow(complexNumber.real(), 2) +
-                           std::pow(complexNumber.imag(), 2));
+  for (int i = 0; i < dftResult.size(); ++i) {
+    magnitude[i] += std::sqrt(std::pow(dftResult[i].real(), 2) +
+                              std::pow(dftResult[i].imag(), 2));
   }
 
   return magnitude;
