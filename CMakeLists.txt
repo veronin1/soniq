@@ -12,6 +12,7 @@ add_executable(soniq
     src/main.cpp
     src/read_wav.cpp
     src/audio_processing.cpp
+    src/visualise_data.cpp
 )
 
 target_include_directories(soniq PRIVATE ${CMAKE_SOURCE_DIR}/include)
