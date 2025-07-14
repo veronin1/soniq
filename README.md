@@ -1,6 +1,6 @@
 # soniq
 
-soniq is a C++ program that plays a user-selected audio file with real-time sound output and displays an audio visualiser using DFT (Discrete Fourier Transform).
+soniq is a C++ program that plays a user-selected audio file with real-time sound output and displays an audio visualiser using either the DFT (Discrete Fourier Transform) algorithm or the radix-2 Cooley-Tukey Fast Fourier Transform (FFT).
 
 ## Demo (so far)
 
@@ -32,7 +32,3 @@ The final executable will be located at:
 ```sh
 ./bin/soniq
 ```
-
-## Todo
-
--   Use FFT for faster and less intensive calculations
