@@ -73,12 +73,13 @@ std::vector<std::complex<double>> discreteFourierTransform(
 std::vector<std::complex<double>> fastFourierTransform(
     const std::vector<double>& sample) {
   size_t sampleSize = sample.size();
+  size_t sampleSizeHalf = sampleSize / 2;
   if (sampleSize <= 1) {
     return {std::complex<double>(sample[0], 0.0)};
   }
 
-  std::vector<double> odd(sampleSize / 2);
-  std::vector<double> even(sampleSize / 2);
+  std::vector<double> odd(sampleSizeHalf);
+  std::vector<double> even(sampleSizeHalf);
 
   for (size_t i = 0; i < sampleSize; ++i) {
     if ((i % 2) == 0) {
@@ -90,6 +91,19 @@ std::vector<std::complex<double>> fastFourierTransform(
 
   auto evenVar = fastFourierTransform(even);
   auto oddVar = fastFourierTransform(odd);
+
+  std::vector<std::complex<double>> twiddle;
+
+  // twiddle[i] = cos(-2πi / N) + i·sin(-2πi / N), where N = sampleSizeHalf
+  // This is equivalent to: twiddle[i] = exp(-2πi * i / N)
+  for (size_t i = 0; i < sampleSizeHalf; ++i) {
+    const std::complex<double> contribution(
+        std::cos(-2 * M_PI * (double)i / (double)sampleSizeHalf),
+        std::sin(-2 * M_PI * (double)i / (double)sampleSizeHalf));
+
+    twiddle.push_back(contribution);
+  }
+  return twiddle;
 }
 
 // calculate magnititude
