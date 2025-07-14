@@ -87,6 +87,9 @@ std::vector<std::complex<double>> fastFourierTransform(
       odd.push_back((sample[i]));
     }
   }
+
+  auto evenVar = fastFourierTransform(even);
+  auto oddVar = fastFourierTransform(odd);
 }
 
 // calculate magnititude
