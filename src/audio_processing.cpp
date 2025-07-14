@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <stdexcept>
 
 #include "read_wav.hpp"
 
@@ -78,6 +79,9 @@ std::vector<std::complex<double>> fastFourierTransform(
   if (sampleSize <= 1) {
     return {std::complex<double>(sample[0], 0.0)};
   }
+  if ((sampleSize & (sampleSize - 1)) != 0U) {
+    throw std::runtime_error("Number is not a power of 2");
+  }
 
   std::vector<double> odd;
   std::vector<double> even;
@@ -93,7 +97,7 @@ std::vector<std::complex<double>> fastFourierTransform(
   auto evenVar = fastFourierTransform(even);
   auto oddVar = fastFourierTransform(odd);
 
-  std::vector<std::complex<double>> twiddle;
+  std::vector<std::complex<double>> twiddle(sampleSize);
 
   // twiddle[i] = cos(-2πi / N) + i·sin(-2πi / N), where N = sampleSizeHalf
   // This is equivalent to: twiddle[i] = exp(-2πi * i / N)
