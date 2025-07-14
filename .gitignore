@@ -63,6 +63,7 @@ html/
 *.code-workspace
 .history
 .vscode/
+.cache/
 
 ################################
 ###########   VS    ############
