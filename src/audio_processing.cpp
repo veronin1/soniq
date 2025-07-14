@@ -70,6 +70,14 @@ std::vector<std::complex<double>> discreteFourierTransform(
   return dftResult;
 }
 
+std::vector<std::complex<double>> fastFourierTransform(
+    const std::vector<double>& sample) {
+  size_t sampleSize = sample.size();
+  if (sampleSize == 1) {
+    return {std::complex<double>(sample[0], 0.0)};
+  }
+}
+
 // calculate magnititude
 std::vector<double> dftToMagnitude(
     const std::vector<std::complex<double>>& dftResult) {
