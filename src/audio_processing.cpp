@@ -76,11 +76,11 @@ std::vector<std::complex<double>> fastFourierTransform(
     const std::vector<double>& sample) {
   size_t sampleSize = sample.size();
   size_t sampleSizeHalf = sampleSize / 2;
-  if (sampleSize <= 1) {
-    return {std::complex<double>(sample[0], 0.0)};
-  }
   if ((sampleSize & (sampleSize - 1)) != 0U) {
     throw std::runtime_error("Number is not a power of 2");
+  }
+  if (sampleSize <= 1) {
+    return {std::complex<double>(sample[0], 0.0)};
   }
 
   std::vector<double> odd;
@@ -103,8 +103,8 @@ std::vector<std::complex<double>> fastFourierTransform(
   // This is equivalent to: twiddle[i] = exp(-2πi * i / N)
   for (size_t i = 0; i < sampleSizeHalf; ++i) {
     const std::complex<double> contribution(
-        std::cos(-2 * M_PI * (double)i / (double)sampleSizeHalf),
-        std::sin(-2 * M_PI * (double)i / (double)sampleSizeHalf));
+        std::cos(-2 * M_PI * (double)i / (double)sampleSize),
+        std::sin(-2 * M_PI * (double)i / (double)sampleSize));
 
     twiddle.push_back(contribution);
   }
