@@ -11,6 +11,8 @@ std::vector<int16_t> convertBytes(WavHeader header,
 std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples);
 std::vector<std::complex<double>> discreteFourierTransform(
     const std::vector<double>& sample);
+std::vector<std::complex<double>> fastFourierTransform(
+    const std::vector<double>& sample);
 std::vector<double> dftToMagnitude(
     const std::vector<std::complex<double>>& dftResult);
 
