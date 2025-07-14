@@ -97,7 +97,7 @@ std::vector<std::complex<double>> fastFourierTransform(
   auto evenVar = fastFourierTransform(even);
   auto oddVar = fastFourierTransform(odd);
 
-  std::vector<std::complex<double>> twiddle(sampleSize);
+  std::vector<std::complex<double>> twiddle;
 
   // twiddle[i] = cos(-2πi / N) + i·sin(-2πi / N), where N = sampleSizeHalf
   // This is equivalent to: twiddle[i] = exp(-2πi * i / N)
@@ -109,7 +109,7 @@ std::vector<std::complex<double>> fastFourierTransform(
     twiddle.push_back(contribution);
   }
 
-  std::vector<std::complex<double>> result;
+  std::vector<std::complex<double>> result(sampleSize);
   for (size_t i = 0; i < sampleSizeHalf; ++i) {
     result[i] = evenVar[i] + twiddle[i] * oddVar[i];
     result[i + sampleSizeHalf] = evenVar[i] - twiddle[i] * oddVar[i];
