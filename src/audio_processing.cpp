@@ -78,8 +78,8 @@ std::vector<std::complex<double>> fastFourierTransform(
     return {std::complex<double>(sample[0], 0.0)};
   }
 
-  std::vector<double> odd(sampleSizeHalf);
-  std::vector<double> even(sampleSizeHalf);
+  std::vector<double> odd;
+  std::vector<double> even;
 
   for (size_t i = 0; i < sampleSize; ++i) {
     if ((i % 2) == 0) {
@@ -102,6 +102,9 @@ std::vector<std::complex<double>> fastFourierTransform(
         std::sin(-2 * M_PI * (double)i / (double)sampleSizeHalf));
 
     twiddle.push_back(contribution);
+  }
+
+  for (size_t i = 0; i < sampleSizeHalf; ++i) {
   }
   return twiddle;
 }
