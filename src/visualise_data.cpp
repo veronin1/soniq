@@ -21,8 +21,8 @@ void printBars(const std::vector<double>& magnitudes) {
     scaledValues.push_back(scaled);
   }
 
-  for (size_t i = 0; i < scaledValues.size(); ++i) {
-    int barLength = static_cast<int>(scaledValues[i]);
+  for (double& current : scaledValues) {
+    int barLength = static_cast<int>(current);
 
     for (int j = 0; j < barLength; ++j) {
       std::cout << '#';
