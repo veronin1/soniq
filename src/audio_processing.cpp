@@ -81,8 +81,7 @@ std::vector<double> dftToMagnitude(
   magnitude.reserve(dftResult.size());
 
   for (const auto& val : dftResult) {
-    magnitude.push_back(
-        std::sqrt(std::pow(val.real(), 2) + std::pow(val.imag(), 2)));
+    magnitude.push_back(std::abs(val));
   }
   return magnitude;
 }
