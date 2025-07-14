@@ -73,9 +73,12 @@ std::vector<std::complex<double>> discreteFourierTransform(
 std::vector<std::complex<double>> fastFourierTransform(
     const std::vector<double>& sample) {
   size_t sampleSize = sample.size();
-  if (sampleSize == 1) {
+  if (sampleSize <= 1) {
     return {std::complex<double>(sample[0], 0.0)};
   }
+
+  std::vector<double> odd(sampleSize / 2);
+  std::vector<double> even(sampleSize / 2);
 }
 
 // calculate magnititude
