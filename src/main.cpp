@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     auto samples = convertBytes(wav.header, wav.soundData);
     auto blocks = sampleToBlock(samples);
     for (const auto& block : blocks) {
-      auto dft = discreteFourierTransform(block);
+      auto dft = fastFourierTransform(block);
       auto mags = dftToMagnitude(dft);
       printBars(mags);
     }
