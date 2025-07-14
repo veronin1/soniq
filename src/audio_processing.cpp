@@ -70,6 +70,7 @@ std::vector<std::complex<double>> discreteFourierTransform(
   return dftResult;
 }
 
+// radix-2 cooley tukey fast fourier transform using 1024 sample
 std::vector<std::complex<double>> fastFourierTransform(
     const std::vector<double>& sample) {
   size_t sampleSize = sample.size();
@@ -104,9 +105,12 @@ std::vector<std::complex<double>> fastFourierTransform(
     twiddle.push_back(contribution);
   }
 
+  std::vector<std::complex<double>> result;
   for (size_t i = 0; i < sampleSizeHalf; ++i) {
+    result[i] = evenVar[i] + twiddle[i] * oddVar[i];
+    result[i + sampleSizeHalf] = evenVar[i] - twiddle[i] * oddVar[i];
   }
-  return twiddle;
+  return result;
 }
 
 // calculate magnititude
