@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
       auto mags = dftToMagnitude(dft);
       printBars(mags);
     }
-
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << '\n';
     return 1;

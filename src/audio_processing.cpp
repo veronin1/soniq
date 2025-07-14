@@ -77,7 +77,8 @@ std::vector<double> dftToMagnitude(
     return {};
   }
   // magntitude = sqrt(real, pow2 + imaginary number, pow 2)
-  std::vector<double> magnitude(dftResult.size());
+  std::vector<double> magnitude;
+  magnitude.reserve(dftResult.size());
 
   for (const auto& val : dftResult) {
     magnitude.push_back(std::abs(val));
