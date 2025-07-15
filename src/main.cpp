@@ -5,10 +5,6 @@
 #include "read_wav.hpp"
 #include "visualise_data.hpp"
 
-const size_t width = 1280;
-const size_t height = 720;
-const char* const title = "soniq";
-
 int main(int argc, char* argv[]) {
   if (argc != 2) {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -20,10 +16,9 @@ int main(int argc, char* argv[]) {
     WavFile wav = read_wav(argv[1]);
     auto samples = convertBytes(wav.header, wav.soundData);
     auto blocks = sampleToBlock(samples);
-    InitWindow(width, height, title);
     for (const auto& block : blocks) {
-      auto dft = fastFourierTransform(block);
-      auto mags = dftToMagnitude(dft);
+      auto fftResult = fastFourierTransform(block);
+      auto mags = computeMagnitude(fftResult);
       waveformVisualiser(mags);
     }
   } catch (const std::exception& e) {
