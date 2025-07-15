@@ -1,10 +1,15 @@
 #include "visualise_data.hpp"
 
+#include <raylib.h>
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
 
 const double maxHeight = 40;
+const size_t width = 1280;
+const size_t height = 720;
+const char* const title = "soniq";
 
 void printBars(const std::vector<double>& magnitudes) {
   double largestMagnitude = 0;
@@ -29,4 +34,10 @@ void printBars(const std::vector<double>& magnitudes) {
     }
     std::cout << '\n';
   }
+}
+
+// use raylib to visualise the data
+void waveformVisualiser(const std::vector<double>& magnitudes) {
+  InitWindow(width, height, title);
+  CloseWindow();
 }
