@@ -58,13 +58,14 @@ void waveformVisualiser(const std::vector<double>& magnitudes) {
     BeginDrawing();
     ClearBackground(BLACK);
 
-    int posX = 50;
-    int barWidth = 40;
-    int PosY = height - 50;
-
-    for (double val : scaledValues) {
+    const int initialX = 50;
+    const int barWidth = 40;
+    const int PosY = height - 50;
+    const int amountToIncrease = 10;
+    int posX = initialX;
+    for (const double& val : scaledValues) {
       DrawRectangle(posX, PosY - int(val), barWidth, int(val), WHITE);
-      posX += barWidth + 10;
+      posX += barWidth + amountToIncrease;
     }
 
     EndDrawing();
