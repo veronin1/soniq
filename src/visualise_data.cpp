@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-const double maxHeight = 40;
+const double maxHeight = 480;
 const size_t height = 720;
 
 void printBars(const std::vector<double>& magnitudes) {
