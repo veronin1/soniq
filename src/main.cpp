@@ -1,5 +1,6 @@
 #include <raylib.h>
 
+#include <algorithm>
 #include <exception>
 #include <iostream>
 
@@ -23,23 +24,31 @@ int main(int argc, char* argv[]) {
     WavFile wav = read_wav(argv[1]);
     InitAudioDevice();
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    Sound file = LoadSound(argv[1]);
+    Music music = LoadMusicStream(argv[1]);
     InitWindow(width, height, title);
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav.header, wav.soundData);
     auto blocks = sampleToBlock(samples);
-    PlaySound(file);
+    PlayMusicStream(music);
 
     size_t currentBlock = 0;
+    float timePlayed = 0.0F;
     while (!WindowShouldClose() && currentBlock < blocks.size()) {
+      UpdateMusicStream(music);
+
+      timePlayed = GetMusicTimePlayed(music) / GetMusicTimeLength(music);
+      timePlayed = std::min(timePlayed, 1.0F);
+      float currentIndex = timePlayed * float(blocks.size());
       auto fftResult = fastFourierTransform(blocks[currentBlock]);
       auto mags = computeMagnitude(fftResult);
       BeginDrawing();
       ClearBackground(BLACK);
       waveformVisualiser(mags);
       EndDrawing();
-      currentBlock++;
+      currentBlock = (size_t)currentIndex;
     }
+    UnloadMusicStream(music);
+    CloseAudioDevice();
     CloseWindow();
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << '\n';
