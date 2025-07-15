@@ -7,9 +7,7 @@
 #include <vector>
 
 const double maxHeight = 40;
-const size_t width = 1280;
 const size_t height = 720;
-const char* const title = "soniq";
 
 void printBars(const std::vector<double>& magnitudes) {
   double largestMagnitude = 0;
@@ -53,23 +51,14 @@ void waveformVisualiser(const std::vector<double>& magnitudes) {
   }
 
   // raylib
-  InitWindow(width, height, title);
-  while (!WindowShouldClose()) {
-    BeginDrawing();
-    ClearBackground(BLACK);
 
-    const int initialX = 50;
-    const int barWidth = 40;
-    const int PosY = height - 50;
-    const int amountToIncrease = 10;
-    int posX = initialX;
-    for (const double& val : scaledValues) {
-      DrawRectangle(posX, PosY - int(val), barWidth, int(val), WHITE);
-      posX += barWidth + amountToIncrease;
-    }
-
-    EndDrawing();
+  const int initialX = 50;
+  const int barWidth = 40;
+  const int PosY = height - 50;
+  const int amountToIncrease = 10;
+  int posX = initialX;
+  for (const double& val : scaledValues) {
+    DrawRectangle(posX, PosY - int(val), barWidth, int(val), WHITE);
+    posX += barWidth + amountToIncrease;
   }
-
-  CloseWindow();
 }
