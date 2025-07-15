@@ -38,6 +38,37 @@ void printBars(const std::vector<double>& magnitudes) {
 
 // use raylib to visualise the data
 void waveformVisualiser(const std::vector<double>& magnitudes) {
+  double largestMagnitude = 0;
+
+  for (double integer : magnitudes) {
+    largestMagnitude = std::max(largestMagnitude, integer);
+  }
+
+  std::vector<double> scaledValues;
+  double scaled = 0.0;
+
+  for (double mag : magnitudes) {
+    scaled = (mag / largestMagnitude) * maxHeight;
+    scaledValues.push_back(scaled);
+  }
+
+  // raylib
   InitWindow(width, height, title);
+  while (!WindowShouldClose()) {
+    BeginDrawing();
+    ClearBackground(BLACK);
+
+    int posX = 50;
+    int barWidth = 40;
+    int PosY = height - 50;
+
+    for (double val : scaledValues) {
+      DrawRectangle(posX, PosY - int(val), barWidth, int(val), WHITE);
+      posX += barWidth + 10;
+    }
+
+    EndDrawing();
+  }
+
   CloseWindow();
 }
