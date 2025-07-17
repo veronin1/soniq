@@ -6,8 +6,7 @@
 
 #include "read_wav.hpp"
 
-std::vector<int16_t> convertBytes(WavHeader header,
-                                  std::vector<std::byte>& soundData);
+std::vector<int16_t> convertBytes(const WavFile& wav);
 std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples);
 std::vector<std::complex<double>> discreteFourierTransform(
     const std::vector<double>& sample);
