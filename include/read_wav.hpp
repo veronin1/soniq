@@ -16,30 +16,36 @@ struct RiffHeader {
   std::array<char, 4> format;   // "WAVE"
 };
 
-struct WavHeader {
-  std::array<char, 4> riff;  // "RIFF"
-  uint32_t chunkSize;        // Size of the entire file in bytes
-  std::array<char, 4> wave;  // "WAVE"
-  std::array<char, 4> fmt;   // "fmt "
-  uint32_t subchunk1Size;    // Size of the fmt chunk (16 for PCM)
-  uint16_t audioFormat;      // Audio format (1 for PCM)
-  uint16_t numChannels;      // Number of channels (1 for mono, 2 for stereo)
-  uint32_t sampleRate;       // Sample rate (e.g., 44100 Hz)
-  uint32_t
-      byteRate;  // Byte rate (sampleRate * numChannels * bitsPerSample / 8)
-  uint16_t blockAlign;       // Block align (numChannels * bitsPerSample / 8)
-  uint16_t bitsPerSample;    // Bits per sample (e.g., 16)
-  std::array<char, 4> data;  // "data"
-  uint32_t dataSize;         // Size of the data chunk
+// Generic chunk header (next 8 bytes)
+struct ChunkHeader {
+  std::array<char, 4> chunkID;  // chunk identifier (e.g. "fmt ", "data")
+  uint32_t chunkSize;           // size of chunk data
 };
+
+// Format chunk ("fmt ") structure
+struct FmtChunk {
+  uint16_t audioFormat;    // Audio format (1 = PCM)
+  uint16_t numChannels;    // Number of channels
+  uint32_t sampleRate;     // Sample rate
+  uint32_t byteRate;       // Byte rate
+  uint16_t blockAlign;     // Block align
+  uint16_t bitsPerSample;  // Bits per sample
+  // Note: Can have extra format bytes for non-PCM formats
+};
+
 #pragma pack(pop)
 
+struct WavMetadata {
+  RiffHeader riffHeader;
+  FmtChunk fmtChunk;
+};
+
 struct WavFile {
-  WavHeader header;
+  WavMetadata metadata;
   std::vector<std::byte> soundData;
 };
 
 WavFile read_wav(const std::string& filename);
-void printHeader(WavHeader& header);
+void printHeader(const WavMetadata& metadata);
 
 #endif
