@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstring>
 #include <fstream>
+#include <ios>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -56,6 +57,11 @@ WavFile read_wav(const std::string& filename) {
       wavFile.read(audioData.data(), chunkHeader.chunkSize);
       if (!wavFile) {
         throw std::runtime_error("Failed to read WAV data");
+      }
+    } else {
+      wavFile.seekg(chunkHeader.chunkSize, std::ios_base::cur);
+      if (!wavFile) {
+        throw std::runtime_error("Failed to read WAV header");
       }
     }
 
