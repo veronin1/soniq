@@ -7,30 +7,26 @@
 #include <stdexcept>
 #include <vector>
 
+const int first12Bytes = 12;
+
 WavFile read_wav(const std::string& filename) {
   std::ifstream wavFile(filename, std::ios::binary);
   if (!wavFile) {
     throw std::ios_base::failure("Failed to open file: " + filename);
   }
 
-  // read entire wav header into struct
+  // read first 12 bytes for RIFF, filesize, WAVE
   WavHeader header{};
-  std::vector<char> headerBuffer(sizeof(WavHeader));
-  wavFile.read(headerBuffer.data(), sizeof(header));
+  std::vector<char> headerBuffer(first12Bytes);
+  wavFile.read(headerBuffer.data(), first12Bytes);
   if (!wavFile) {
     throw std::runtime_error("Failed to read WAV header");
   }
-  std::memcpy(&header, headerBuffer.data(), sizeof(WavHeader));
 
-  if (std::memcmp(header.riff.data(), "RIFF", 4) != 0 ||
-      std::memcmp(header.wave.data(), "WAVE", 4) != 0 ||
-      std::memcmp(header.fmt.data(), "fmt ", 4) != 0 ||
-      std::memcmp(header.data.data(), "data", 4) != 0) {
-    throw std::runtime_error("Invalid WAV file format");
-  }
-  if (header.bitsPerSample != bits16perSample) {
-    throw std::runtime_error("Only 16-bit samples are supported");
-  }
+  // loop to read next chunk ID, chunk size, if chunk = 'fmt ', if chunk ==
+  // 'data', load samples
+
+  std::memcpy(&header, headerBuffer.data(), sizeof(WavHeader));
 
   // read samples into soundData vector
   std::vector<std::byte> soundData(header.dataSize);
