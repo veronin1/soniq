@@ -50,8 +50,6 @@ void waveformVisualiser(const std::vector<double>& magnitudes) {
     scaledValues.push_back(scaled);
   }
 
-  // raylib
-
   const int initialX = 50;
   const int barWidth = 40;
   const int PosY = height - 50;
