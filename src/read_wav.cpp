@@ -44,13 +44,19 @@ WavFile read_wav(const std::string& filename) {
 
     if (std::memcmp(chunkHeader.chunkID.data(), "fmt ", 4) == 0) {
       std::vector<char> fmtBuffer(chunkHeader.chunkSize);
-      wavFile.read(fmtBuffer.data(), sizeof(ChunkHeader));
+      wavFile.read(fmtBuffer.data(), sizeof(chunkHeader));
       if (!wavFile) {
-        throw std::runtime_error("Failed to read WAV header");
+        throw std::runtime_error("Failed to read FMT data");
       }
       std::memcpy(&fmtChunk, fmtBuffer.data(),
                   std::min(static_cast<uint32_t>(sizeof(FmtChunk)),
                            chunkHeader.chunkSize));
+    } else if (std::memcmp(chunkHeader.chunkID.data(), "data", 4) == 0) {
+      std::vector<char> audioData(chunkHeader.chunkSize);
+      wavFile.read(audioData.data(), chunkHeader.chunkSize);
+      if (!wavFile) {
+        throw std::runtime_error("Failed to read WAV data");
+      }
     }
 
     /*
