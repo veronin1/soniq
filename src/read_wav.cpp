@@ -22,11 +22,15 @@ WavFile read_wav(const std::string& filename) {
   if (!wavFile) {
     throw std::runtime_error("Failed to read WAV header");
   }
+  std::memcpy(&header, headerBuffer.data(), first12Bytes);
+
+  if (std::memcmp(header.riff.data(), "RIFF", 4) != 0 ||
+      std::memcmp(header.wave.data(), "WAVE", 4) != 0) {
+    throw std::runtime_error("Invalid WAV file format");
+  }
 
   // loop to read next chunk ID, chunk size, if chunk = 'fmt ', if chunk ==
-  // 'data', load samples
-
-  std::memcpy(&header, headerBuffer.data(), sizeof(WavHeader));
+  // 'data', load samples`
 
   // read samples into soundData vector
   std::vector<std::byte> soundData(header.dataSize);
