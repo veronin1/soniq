@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     Music music = LoadMusicStream(argv[1]);
     InitWindow(width, height, title);
     SetTargetFPS(targetFps);
-    auto samples = convertBytes(wav.header, wav.soundData);
+    auto samples = convertBytes(wav);
     auto blocks = sampleToBlock(samples);
     PlayMusicStream(music);
 
