@@ -11,10 +11,10 @@
 #endif
 
 // Convert bytes into 16 bit numbers
-std::vector<int16_t> convertBytes(WavHeader header,
-                                  std::vector<std::byte>& soundData) {
+std::vector<int16_t> convertBytes(const WavFile& wav) {
   std::vector<int16_t> samples;
-  if (header.bitsPerSample == bits16perSample) {
+  if (wav.metadata.fmtChunk.bitsPerSample == bits16perSample) {
+    const auto& soundData = wav.soundData;
     samples.reserve(soundData.size() / 2);
 
     for (size_t i = 0; i < soundData.size(); i += 2) {
