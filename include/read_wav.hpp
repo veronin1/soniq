@@ -10,6 +10,12 @@
 const int bits16perSample = 16;
 
 #pragma pack(push, 1)
+struct RiffHeader {
+  std::array<char, 4> chunkID;  // "RIFF"
+  uint32_t chunkSize;           // File size minus 8 bytes
+  std::array<char, 4> format;   // "WAVE"
+};
+
 struct WavHeader {
   std::array<char, 4> riff;  // "RIFF"
   uint32_t chunkSize;        // Size of the entire file in bytes

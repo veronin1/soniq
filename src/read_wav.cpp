@@ -7,8 +7,6 @@
 #include <stdexcept>
 #include <vector>
 
-const int first12Bytes = 12;
-
 WavFile read_wav(const std::string& filename) {
   std::ifstream wavFile(filename, std::ios::binary);
   if (!wavFile) {
@@ -16,22 +14,23 @@ WavFile read_wav(const std::string& filename) {
   }
 
   // read first 12 bytes for RIFF, filesize, WAVE
-  WavHeader header{};
-  std::vector<char> headerBuffer(first12Bytes);
-  wavFile.read(headerBuffer.data(), first12Bytes);
+  RiffHeader riffHeader{};
+  std::vector<char> riffHeaderBuffer(sizeof(riffHeader));
+  wavFile.read(riffHeaderBuffer.data(), sizeof(riffHeader));
   if (!wavFile) {
     throw std::runtime_error("Failed to read WAV header");
   }
-  std::memcpy(&header, headerBuffer.data(), first12Bytes);
+  std::memcpy(&riffHeader, riffHeaderBuffer.data(), sizeof(riffHeader));
 
-  if (std::memcmp(header.riff.data(), "RIFF", 4) != 0 ||
-      std::memcmp(header.wave.data(), "WAVE", 4) != 0) {
+  if (std::memcmp(riffHeader.chunkID.data(), "RIFF", 4) != 0 ||
+      std::memcmp(riffHeader.format.data(), "WAVE", 4) != 0) {
     throw std::runtime_error("Invalid WAV file format");
   }
 
   // loop to read next chunk ID, chunk size, if chunk = 'fmt ', if chunk ==
   // 'data', load samples`
 
+  /*
   // read samples into soundData vector
   std::vector<std::byte> soundData(header.dataSize);
   std::vector<char> soundDataBuffer(header.dataSize);
@@ -44,6 +43,7 @@ WavFile read_wav(const std::string& filename) {
   printHeader(header);
 
   return WavFile{header, std::move(soundData)};
+  */
 }
 
 // Print important header data
