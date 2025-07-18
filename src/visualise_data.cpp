@@ -12,20 +12,20 @@ const size_t height = 720;
 void printBars(const std::vector<double>& magnitudes) {
   double largestMagnitude = 0;
 
-  for (double integer : magnitudes) {
+  for (const double integer : magnitudes) {
     largestMagnitude = std::max(largestMagnitude, integer);
   }
 
   std::vector<double> scaledValues;
   double scaled = 0.0;
 
-  for (double mag : magnitudes) {
+  for (const double mag : magnitudes) {
     scaled = (mag / largestMagnitude) * maxHeight;
     scaledValues.push_back(scaled);
   }
 
-  for (double& current : scaledValues) {
-    int barLength = static_cast<int>(current);
+  for (const double& current : scaledValues) {
+    const int barLength = static_cast<int>(current);
 
     for (int j = 0; j < barLength; ++j) {
       std::cout << '#';
@@ -39,14 +39,14 @@ void waveformVisualiser(const std::vector<double>& magnitudes,
                         int windowWidth) {
   double largestMagnitude = 0;
 
-  for (double integer : magnitudes) {
+  for (const double integer : magnitudes) {
     largestMagnitude = std::max(largestMagnitude, integer);
   }
 
   std::vector<double> scaledValues;
   double scaled = 0.0;
 
-  for (double mag : magnitudes) {
+  for (const double mag : magnitudes) {
     scaled = (mag / largestMagnitude) * maxHeight;
     scaledValues.push_back(scaled);
   }
@@ -56,7 +56,8 @@ void waveformVisualiser(const std::vector<double>& magnitudes,
   const int amountToIncrease = 10;
   int posX = initialX;
 
-  int numberOfBars = (windowWidth - initialX) / (barWidth + amountToIncrease);
+  const int numberOfBars =
+      (windowWidth - initialX) / (barWidth + amountToIncrease);
 
   std::vector<double> numOfBars(static_cast<size_t>(numberOfBars));
   for (size_t i = 0; i < numOfBars.size(); ++i) {
