@@ -4,5 +4,6 @@
 #include <vector>
 
 void printBars(const std::vector<double>& magnitudes);
-void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth);
+void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
+                        int windowHeight);
 #endif
