@@ -37,6 +37,10 @@ void printBars(const std::vector<double>& magnitudes) {
 // use raylib to visualise the data
 void waveformVisualiser(const std::vector<double>& magnitudes,
                         int windowWidth) {
+  if (magnitudes.empty()) {
+    return;
+  }
+
   double largestMagnitude = 0;
 
   for (const double integer : magnitudes) {
