@@ -8,10 +8,10 @@
 #include "read_wav.hpp"
 #include "visualise_data.hpp"
 
-const size_t width = 1920;
-const size_t height = 1080;
+const size_t width = 1280;
+const size_t height = 720;
 const char* const title = "soniq";
-const int targetFps = 240;
+const int targetFps = 60;
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
