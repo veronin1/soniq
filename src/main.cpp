@@ -8,10 +8,10 @@
 #include "read_wav.hpp"
 #include "visualise_data.hpp"
 
-const size_t width = 1440;
-const size_t height = 720;
+const size_t width = 1327;
+const size_t height = 625;
 const char* const title = "soniq";
-const int targetFps = 60;
+const int targetFps = 240;
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
       auto mags = computeMagnitude(fftResult);
       BeginDrawing();
       ClearBackground(BLACK);
-      waveformVisualiser(mags, width);
+      waveformVisualiser(mags, width, height);
       EndDrawing();
       currentBlock = (size_t)currentIndex;
     }
