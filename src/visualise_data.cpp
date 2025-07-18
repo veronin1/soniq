@@ -3,12 +3,9 @@
 #include <raylib.h>
 
 #include <algorithm>
-#include <iostream>
 #include <vector>
 
-const double maxHeight = 480;
-const size_t height = 720;
-
+/*
 void printBars(const std::vector<double>& magnitudes) {
   double largestMagnitude = 0;
 
@@ -33,13 +30,17 @@ void printBars(const std::vector<double>& magnitudes) {
     std::cout << '\n';
   }
 }
+  */
 
 // use raylib to visualise the data
-void waveformVisualiser(const std::vector<double>& magnitudes,
-                        int windowWidth) {
+void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
+                        int windowHeight) {
   if (magnitudes.empty()) {
     return;
   }
+
+  // set maxHeight as 80% of total window Height
+  const double maxHeight = windowHeight * 0.8;
 
   double largestMagnitude = 0;
 
@@ -54,14 +55,15 @@ void waveformVisualiser(const std::vector<double>& magnitudes,
     scaled = (mag / largestMagnitude) * maxHeight;
     scaledValues.push_back(scaled);
   }
+
   const int initialX = 50;
   const int barWidth = 15;
-  const int PosY = height - 50;
+  const int PosY = windowHeight - 50;
   const int amountToIncrease = 10;
   int posX = initialX;
 
   const int numberOfBars =
-      (windowWidth - initialX) / (barWidth + amountToIncrease);
+      (windowWidth - 2 * initialX) / (barWidth + amountToIncrease);
 
   std::vector<double> numOfBars(static_cast<size_t>(numberOfBars));
   for (size_t i = 0; i < numOfBars.size(); ++i) {
