@@ -30,7 +30,7 @@ target_compile_options(soniq PRIVATE
     -fstack-protector-strong
     -D_FORTIFY_SOURCE=2
     -fsanitize=address
-    -O2
+    -O3
 )
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
