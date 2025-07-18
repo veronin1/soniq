@@ -21,10 +21,10 @@ int main(int argc, char* argv[]) {
   }
   try {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    WavFile wav = read_wav(argv[1]);
+    const WavFile wav = read_wav(argv[1]);
     InitAudioDevice();
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    Music music = LoadMusicStream(argv[1]);
+    const Music music = LoadMusicStream(argv[1]);
     InitWindow(width, height, title);
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 
       timePlayed = GetMusicTimePlayed(music) / GetMusicTimeLength(music);
       timePlayed = std::min(timePlayed, 1.0F);
-      float currentIndex = timePlayed * float(blocks.size());
+      const float currentIndex = timePlayed * float(blocks.size());
       auto fftResult = fastFourierTransform(blocks[currentBlock]);
       auto mags = computeMagnitude(fftResult);
       BeginDrawing();
