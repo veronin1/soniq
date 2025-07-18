@@ -50,12 +50,17 @@ void waveformVisualiser(const std::vector<double>& magnitudes) {
     scaledValues.push_back(scaled);
   }
 
+  std::vector<double> numOfBars(47);
+  for (size_t i = 0; i < numOfBars.size(); ++i) {
+    numOfBars[i] = scaledValues[i];
+  }
+
   const int initialX = 50;
-  const int barWidth = 40;
+  const int barWidth = 15;
   const int PosY = height - 50;
   const int amountToIncrease = 10;
   int posX = initialX;
-  for (const double& val : scaledValues) {
+  for (const double& val : numOfBars) {
     DrawRectangle(posX, PosY - int(val), barWidth, int(val), WHITE);
     posX += barWidth + amountToIncrease;
   }
