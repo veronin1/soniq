@@ -21,13 +21,7 @@ cmake ..
 make
 ```
 
-The final executable will be located at:
-
-```sh
-./bin/soniq
-```
-
-## Run File
+## Run
 
 ```sh
 ./bin/soniq
