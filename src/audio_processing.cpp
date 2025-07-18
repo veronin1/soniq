@@ -74,8 +74,8 @@ std::vector<std::complex<double>> discreteFourierTransform(
 // radix-2 cooley tukey fast fourier transform using 1024 sample
 std::vector<std::complex<double>> fastFourierTransform(
     const std::vector<double>& sample) {
-  size_t sampleSize = sample.size();
-  size_t sampleSizeHalf = sampleSize / 2;
+  const size_t sampleSize = sample.size();
+  const size_t sampleSizeHalf = sampleSize / 2;
   if ((sampleSize & (sampleSize - 1)) != 0U) {
     throw std::runtime_error("Number is not a power of 2");
   }
