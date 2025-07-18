@@ -8,8 +8,8 @@
 #include "read_wav.hpp"
 #include "visualise_data.hpp"
 
-const size_t width = 1327;
-const size_t height = 625;
+const size_t width = 1920;
+const size_t height = 1080;
 const char* const title = "soniq";
 const int targetFps = 240;
 
@@ -25,6 +25,7 @@ int main(int argc, char* argv[]) {
     InitAudioDevice();
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     const Music music = LoadMusicStream(argv[1]);
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     InitWindow(width, height, title);
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
@@ -43,7 +44,7 @@ int main(int argc, char* argv[]) {
       auto mags = computeMagnitude(fftResult);
       BeginDrawing();
       ClearBackground(BLACK);
-      waveformVisualiser(mags, width, height);
+      waveformVisualiser(mags, GetScreenWidth(), GetScreenHeight());
       EndDrawing();
       currentBlock = (size_t)currentIndex;
     }
