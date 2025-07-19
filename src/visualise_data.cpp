@@ -61,16 +61,16 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   std::vector<double> scaledValues;
   std::deque<double> previousValues;
   const size_t smoothingWindow = 5;
-  for (size_t i = 0; i < magnitudes.size(); ++i) {
-    previousValues.push_back(magnitudes[i]);
+  for (double magnitude : magnitudes) {
+    previousValues.push_back(magnitude);
     if (previousValues.size() > smoothingWindow) {
       previousValues.pop_front();
     }
 
-    double average =
+    const double average =
         std::accumulate(previousValues.begin(), previousValues.end(), 0.0) /
         (double)previousValues.size();
-    double scaled = (average / largestMagnitude) * maxHeight;
+    const double scaled = (average / largestMagnitude) * maxHeight;
 
     scaledValues.push_back(scaled);
   }
