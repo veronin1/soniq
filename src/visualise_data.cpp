@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <deque>
 #include <iostream>
+#include <numeric>
 #include <vector>
 
 void printBars(const std::vector<double>& magnitudes, int windowHeight) {
@@ -66,14 +67,11 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
       previousValues.pop_front();
     }
 
-    double average = 0.0;
-    for (double val : previousValues) {
-      average += val;
-    }
-    average /= (double)previousValues.size();
+    double average =
+        std::accumulate(previousValues.begin(), previousValues.end(), 0.0) /
+        (double)previousValues.size();
 
-    double scaled = (average / largestMagnitude) * maxHeight;
-    scaledValues.push_back(scaled);
+    scaledValues.push_back(average);
   }
 
   // visualise bars
