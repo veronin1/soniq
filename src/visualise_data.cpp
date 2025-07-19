@@ -70,8 +70,9 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
     double average =
         std::accumulate(previousValues.begin(), previousValues.end(), 0.0) /
         (double)previousValues.size();
+    double scaled = (average / largestMagnitude) * maxHeight;
 
-    scaledValues.push_back(average);
+    scaledValues.push_back(scaled);
   }
 
   // visualise bars
