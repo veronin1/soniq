@@ -49,10 +49,10 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   // set maxHeight as 80% of total window Height
   const double maxHeight = windowHeight * 0.8;
 
-  double largestMagnitude = 0;
-
-  for (const double integer : magnitudes) {
-    largestMagnitude = std::max(largestMagnitude, integer);
+  double largestMagnitude =
+      *std::max_element(magnitudes.begin(), magnitudes.end());
+  if (largestMagnitude == 0) {
+    largestMagnitude = 1;
   }
 
   std::vector<double> scaledValues;
