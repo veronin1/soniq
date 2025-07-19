@@ -3,7 +3,10 @@
 #include <raylib.h>
 
 #include <algorithm>
+#include <cstddef>
+#include <deque>
 #include <iostream>
+#include <numeric>
 #include <vector>
 
 void printBars(const std::vector<double>& magnitudes, int windowHeight) {
@@ -47,20 +50,32 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   // set maxHeight as 80% of total window Height
   const double maxHeight = windowHeight * 0.8;
 
-  double largestMagnitude = 0;
-
-  for (const double integer : magnitudes) {
-    largestMagnitude = std::max(largestMagnitude, integer);
+  // find largest magnitude
+  double largestMagnitude =
+      *std::max_element(magnitudes.begin(), magnitudes.end());
+  if (largestMagnitude == 0) {
+    largestMagnitude = 1;
   }
 
+  // smooth and scale the magnitudes
   std::vector<double> scaledValues;
-  double scaled = 0.0;
+  std::deque<double> previousValues;
+  const size_t smoothingWindow = 2;
+  for (const double magnitude : magnitudes) {
+    previousValues.push_back(magnitude);
+    if (previousValues.size() > smoothingWindow) {
+      previousValues.pop_front();
+    }
 
-  for (const double mag : magnitudes) {
-    scaled = (mag / largestMagnitude) * maxHeight;
+    const double average =
+        std::accumulate(previousValues.begin(), previousValues.end(), 0.0) /
+        (double)previousValues.size();
+    const double scaled = (average / largestMagnitude) * maxHeight;
+
     scaledValues.push_back(scaled);
   }
 
+  // visualise bars
   const int initialX = 50;
   const int barWidth = 15;
   const int PosY = windowHeight - 50;
