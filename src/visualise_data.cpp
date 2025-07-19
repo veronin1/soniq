@@ -61,7 +61,7 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   std::vector<double> scaledValues;
   std::deque<double> previousValues;
   const size_t smoothingWindow = 5;
-  for (double magnitude : magnitudes) {
+  for (const double magnitude : magnitudes) {
     previousValues.push_back(magnitude);
     if (previousValues.size() > smoothingWindow) {
       previousValues.pop_front();
