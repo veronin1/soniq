@@ -60,7 +60,7 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   // smooth and scale the magnitudes
   std::vector<double> scaledValues;
   std::deque<double> previousValues;
-  const size_t smoothingWindow = 5;
+  const size_t smoothingWindow = 2;
   for (const double magnitude : magnitudes) {
     previousValues.push_back(magnitude);
     if (previousValues.size() > smoothingWindow) {
