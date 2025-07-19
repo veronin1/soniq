@@ -3,10 +3,16 @@
 #include <raylib.h>
 
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
-/*
-void printBars(const std::vector<double>& magnitudes) {
+void printBars(const std::vector<double>& magnitudes, int windowHeight) {
+  if (magnitudes.empty()) {
+    return;
+  }
+
+  const double maxHeight = windowHeight * 0.8;
+
   double largestMagnitude = 0;
 
   for (const double integer : magnitudes) {
@@ -30,7 +36,6 @@ void printBars(const std::vector<double>& magnitudes) {
     std::cout << '\n';
   }
 }
-  */
 
 // use raylib to visualise the data
 void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
