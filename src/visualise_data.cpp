@@ -3,6 +3,8 @@
 #include <raylib.h>
 
 #include <algorithm>
+#include <cstddef>
+#include <deque>
 #include <iostream>
 #include <vector>
 
@@ -54,10 +56,21 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   }
 
   std::vector<double> scaledValues;
-  double scaled = 0.0;
+  std::deque<double> previousValues;
+  const size_t smoothingWindow = 5;
+  for (size_t i = 0; i < magnitudes.size(); ++i) {
+    previousValues.push_back(magnitudes[i]);
+    if (previousValues.size() > smoothingWindow) {
+      previousValues.pop_front();
+    }
 
-  for (const double mag : magnitudes) {
-    scaled = (mag / largestMagnitude) * maxHeight;
+    double average = 0.0;
+    for (double val : previousValues) {
+      average += val;
+    }
+    average /= (double)previousValues.size();
+
+    double scaled = (average / largestMagnitude) * maxHeight;
     scaledValues.push_back(scaled);
   }
 
