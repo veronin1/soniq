@@ -22,7 +22,7 @@ std::vector<int16_t> convertBytes(const WavFile& wav) {
       const auto sample = static_cast<int16_t>(
           (static_cast<uint8_t>(byte2) << 8) | static_cast<uint8_t>(byte1));
 
-      samples.push_back(sample);
+      samples.emplace_back(sample);
     }
   }
 
