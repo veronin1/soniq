@@ -74,6 +74,10 @@ std::vector<std::complex<double>> discreteFourierTransform(
 std::vector<std::complex<float>> fastFourierTransform(
     const std::vector<float>& sample, size_t start, size_t step) {
   auto subproblem = sample.size() / step;
+  if ((subproblem & (subproblem - 1)) != 0) {
+    throw std::runtime_error("Subproblem size is not a power of 2");
+  }
+
   if (subproblem == 1) {
     return {std::complex<float>(sample[start], 0.0F)};
   }
