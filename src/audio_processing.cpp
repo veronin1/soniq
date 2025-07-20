@@ -39,6 +39,10 @@ std::vector<float> getBlock(std::vector<int16_t>& samples,
 
   auto startingOffset = currentIndex * blockSize;
 
+  if (startingOffset + blockSize > samples.size()) {
+    return block;
+  }
+
   for (size_t i = startingOffset; i < startingOffset + blockSize; ++i) {
     block.push_back(static_cast<float>(samples[i]) / absoluteValue);
   }
