@@ -2,13 +2,11 @@
 
 #include <cmath>
 #include <cstddef>
-#include <stdexcept>
 
 #include "read_wav.hpp"
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+constexpr float M_PIF = 3.1415927F;
+const size_t blockSize = 1024;
 
 // Convert bytes into 16 bit numbers
 std::vector<int16_t> convertBytes(const WavFile& wav) {
@@ -24,7 +22,7 @@ std::vector<int16_t> convertBytes(const WavFile& wav) {
       const auto sample = static_cast<int16_t>(
           (static_cast<uint8_t>(byte2) << 8) | static_cast<uint8_t>(byte1));
 
-      samples.push_back(sample);
+      samples.emplace_back(sample);
     }
   }
 
@@ -32,22 +30,23 @@ std::vector<int16_t> convertBytes(const WavFile& wav) {
 }
 
 // chunk the audio data
-std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
-  const double absoluteValue = 32768.0;
-  const size_t blockSize = 1024;
-  const size_t numBlocks = samples.size() / blockSize;
-  std::vector<std::vector<double>> buffer;
+std::vector<float> getBlock(std::vector<int16_t>& samples,
+                            size_t currentIndex) {
+  const float absoluteValue = 32768.0F;
+  std::vector<float> block;
+  block.reserve(blockSize);
 
-  for (size_t i = 0; i < numBlocks; ++i) {
-    std::vector<double> block;
-    block.reserve(blockSize);
-    for (size_t j = 0; j < blockSize; ++j) {
-      const int16_t sample = samples[(i * blockSize) + j];
-      block.push_back(static_cast<double>(sample) / absoluteValue);
-    }
-    buffer.push_back(std::move(block));
+  auto startingOffset = currentIndex * blockSize;
+
+  if (startingOffset + blockSize > samples.size()) {
+    return block;
   }
-  return buffer;
+
+  for (size_t i = startingOffset; i < startingOffset + blockSize; ++i) {
+    block.push_back(static_cast<float>(samples[i]) / absoluteValue);
+  }
+
+  return block;
 }
 
 // calculate discrete fourier transform on a single sample
@@ -72,63 +71,52 @@ std::vector<std::complex<double>> discreteFourierTransform(
 }
 
 // radix-2 cooley tukey fast fourier transform using 1024 sample
-std::vector<std::complex<double>> fastFourierTransform(
-    const std::vector<double>& sample) {
-  const size_t sampleSize = sample.size();
-  const size_t sampleSizeHalf = sampleSize / 2;
-  if ((sampleSize & (sampleSize - 1)) != 0U) {
-    throw std::runtime_error("Number is not a power of 2");
-  }
-  if (sampleSize <= 1) {
-    return {std::complex<double>(sample[0], 0.0)};
+std::vector<std::complex<float>> fastFourierTransform(
+    const std::vector<float>& sample, size_t start, size_t step) {
+  auto subproblem = sample.size() / step;
+  if ((subproblem & (subproblem - 1)) != 0) {
+    throw std::runtime_error("Subproblem size is not a power of 2");
   }
 
-  std::vector<double> odd;
-  std::vector<double> even;
-
-  for (size_t i = 0; i < sampleSize; ++i) {
-    if ((i % 2) == 0) {
-      even.push_back(sample[i]);
-    } else {
-      odd.push_back((sample[i]));
-    }
+  if (subproblem == 1) {
+    return {std::complex<float>(sample[start], 0.0F)};
   }
 
-  auto evenVar = fastFourierTransform(even);
-  auto oddVar = fastFourierTransform(odd);
+  auto evenVar = fastFourierTransform(sample, start, step * 2);
+  auto oddVar = fastFourierTransform(sample, start + step, step * 2);
 
-  std::vector<std::complex<double>> twiddle;
+  std::vector<std::complex<float>> twiddle;
 
   // twiddle[i] = cos(-2πi / N) + i·sin(-2πi / N), where N = sampleSizeHalf
   // This is equivalent to: twiddle[i] = exp(-2πi * i / N)
-  for (size_t i = 0; i < sampleSizeHalf; ++i) {
-    const std::complex<double> contribution(
-        std::cos(-2 * M_PI * (double)i / (double)sampleSize),
-        std::sin(-2 * M_PI * (double)i / (double)sampleSize));
+  for (size_t i = 0; i < subproblem / 2; ++i) {
+    const std::complex<float> contribution(
+        std::cos(-2.0F * M_PIF * (float)i / (float)subproblem),
+        std::sin(-2.0F * M_PIF * (float)i / (float)subproblem));
 
     twiddle.push_back(contribution);
   }
 
-  std::vector<std::complex<double>> result(sampleSize);
-  for (size_t i = 0; i < sampleSizeHalf; ++i) {
+  std::vector<std::complex<float>> result(subproblem);
+  for (size_t i = 0; i < subproblem / 2; ++i) {
     result[i] = evenVar[i] + twiddle[i] * oddVar[i];
-    result[i + sampleSizeHalf] = evenVar[i] - twiddle[i] * oddVar[i];
+    result[i + (subproblem / 2)] = evenVar[i] - twiddle[i] * oddVar[i];
   }
   return result;
 }
 
 // Compute magnitude spectrum from Fourier Transform (DFT or FFT) result
-std::vector<double> computeMagnitude(
-    const std::vector<std::complex<double>>& fourierResult) {
+std::vector<float> computeMagnitude(
+    const std::vector<std::complex<float>>& fourierResult) {
   if (fourierResult.empty()) {
     return {};
   }
   // magnitude = sqrt(real^2 + imag^2)
-  std::vector<double> magnitude;
+  std::vector<float> magnitude;
   magnitude.reserve(fourierResult.size());
 
   for (const auto& val : fourierResult) {
-    magnitude.push_back(std::abs(val));
+    magnitude.push_back(static_cast<float>(std::abs(val)));
   }
   return magnitude;
 }
