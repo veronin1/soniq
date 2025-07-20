@@ -41,7 +41,7 @@ void printBars(const std::vector<double>& magnitudes, int windowHeight) {
 }
 
 // use raylib to visualise the data
-void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
+void waveformVisualiser(const std::vector<float>& magnitudes, int windowWidth,
                         int windowHeight) {
   if (magnitudes.empty()) {
     return;
@@ -51,26 +51,27 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   const double maxHeight = windowHeight * 0.8;
 
   // find largest magnitude
-  double largestMagnitude =
+  float largestMagnitude =
       *std::max_element(magnitudes.begin(), magnitudes.end());
   if (largestMagnitude == 0) {
-    largestMagnitude = 1;
+    largestMagnitude = 1.0F;
   }
 
   // smooth and scale the magnitudes
-  std::vector<double> scaledValues;
-  std::deque<double> previousValues;
+  std::vector<float> scaledValues;
+  std::deque<float> previousValues;
   const size_t smoothingWindow = 2;
-  for (const double magnitude : magnitudes) {
+  for (const float magnitude : magnitudes) {
     previousValues.push_back(magnitude);
     if (previousValues.size() > smoothingWindow) {
       previousValues.pop_front();
     }
 
-    const double average =
-        std::accumulate(previousValues.begin(), previousValues.end(), 0.0) /
-        (double)previousValues.size();
-    const double scaled = (average / largestMagnitude) * maxHeight;
+    const float average =
+        std::accumulate(previousValues.begin(), previousValues.end(), 0.0F) /
+        static_cast<float>(previousValues.size());
+    const float scaled =
+        ((average / largestMagnitude) * static_cast<float>(maxHeight));
 
     scaledValues.push_back(scaled);
   }
@@ -85,13 +86,14 @@ void waveformVisualiser(const std::vector<double>& magnitudes, int windowWidth,
   const int numberOfBars =
       (windowWidth - 2 * initialX) / (barWidth + amountToIncrease);
 
-  std::vector<double> numOfBars(static_cast<size_t>(numberOfBars));
+  std::vector<float> numOfBars(static_cast<size_t>(numberOfBars));
   for (size_t i = 0; i < numOfBars.size(); ++i) {
     numOfBars[i] = scaledValues[i];
   }
 
-  for (const double& val : numOfBars) {
-    DrawRectangle(posX, PosY - int(val), barWidth, int(val), WHITE);
+  for (const float& val : numOfBars) {
+    DrawRectangle(posX, PosY - static_cast<int>(val), barWidth,
+                  static_cast<int>(val), WHITE);
     posX += barWidth + amountToIncrease;
   }
 }
