@@ -84,7 +84,8 @@ void waveformVisualiser(const std::vector<float>& magnitudes, int windowWidth,
   int posX = initialX;
 
   const int numberOfBars =
-      (windowWidth - 2 * initialX) / (barWidth + amountToIncrease);
+      std::min((windowWidth - 2 * initialX) / (barWidth + amountToIncrease),
+               static_cast<int>(scaledValues.size()));
 
   std::vector<float> numOfBars(static_cast<size_t>(numberOfBars));
   for (size_t i = 0; i < numOfBars.size(); ++i) {
