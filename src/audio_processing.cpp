@@ -97,7 +97,7 @@ std::vector<std::complex<float>> fastFourierTransform(
   std::vector<std::complex<float>> result(subproblem);
   for (size_t i = 0; i < subproblem / 2; ++i) {
     result[i] = evenVar[i] + twiddle[i] * oddVar[i];
-    result[i + subproblem / 2] = evenVar[i] - twiddle[i] * oddVar[i];
+    result[i + (subproblem / 2)] = evenVar[i] - twiddle[i] * oddVar[i];
   }
   return result;
 }
