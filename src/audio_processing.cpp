@@ -6,9 +6,7 @@
 
 #include "read_wav.hpp"
 
-#ifndef M_PIF
-#define M_PIF 3.1415927F
-#endif
+constexpr float M_PIF = 3.1415927F;
 
 // Convert bytes into 16 bit numbers
 std::vector<int16_t> convertBytes(const WavFile& wav) {
@@ -32,18 +30,18 @@ std::vector<int16_t> convertBytes(const WavFile& wav) {
 }
 
 // chunk the audio data
-std::vector<std::vector<double>> sampleToBlock(std::vector<int16_t>& samples) {
-  const double absoluteValue = 32768.0;
+std::vector<std::vector<float>> sampleToBlock(std::vector<int16_t>& samples) {
+  const float absoluteValue = 32768.0F;
   const size_t blockSize = 1024;
   const size_t numBlocks = samples.size() / blockSize;
-  std::vector<std::vector<double>> buffer;
+  std::vector<std::vector<float>> buffer;
 
   for (size_t i = 0; i < numBlocks; ++i) {
-    std::vector<double> block;
+    std::vector<float> block;
     block.reserve(blockSize);
     for (size_t j = 0; j < blockSize; ++j) {
       const int16_t sample = samples[(i * blockSize) + j];
-      block.push_back(static_cast<double>(sample) / absoluteValue);
+      block.push_back(static_cast<float>(sample) / absoluteValue);
     }
     buffer.push_back(std::move(block));
   }
@@ -119,7 +117,7 @@ std::vector<std::complex<float>> fastFourierTransform(
 
 // Compute magnitude spectrum from Fourier Transform (DFT or FFT) result
 std::vector<float> computeMagnitude(
-    const std::vector<std::complex<double>>& fourierResult) {
+    const std::vector<std::complex<float>>& fourierResult) {
   if (fourierResult.empty()) {
     return {};
   }
