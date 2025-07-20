@@ -11,7 +11,7 @@ std::vector<float> getBlock(std::vector<int16_t>& samples, size_t currentIndex);
 std::vector<std::complex<double>> discreteFourierTransform(
     const std::vector<double>& sample);
 std::vector<std::complex<float>> fastFourierTransform(
-    const std::vector<float>& sample);
+    const std::vector<float>& sample, size_t start, size_t step);
 std::vector<float> computeMagnitude(
     const std::vector<std::complex<float>>& fourierResult);
 

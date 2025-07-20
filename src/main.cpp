@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
 
       if (!cachedMagnitudes[currentBlock].has_value()) {
         cachedMagnitudes[currentBlock] =
-            computeMagnitude(fastFourierTransform(block));
+            computeMagnitude(fastFourierTransform(block, 0, 1));
       }
 
       waveformVisualiser(cachedMagnitudes[currentBlock].value(),
