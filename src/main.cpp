@@ -57,16 +57,14 @@ int main(int argc, char* argv[]) {
       BeginDrawing();
       ClearBackground(BLACK);
 
-      if (cachedMagnitudes[currentBlock].has_value()) {
-        waveformVisualiser(cachedMagnitudes[currentBlock].value(),
-                           GetScreenWidth(), GetScreenHeight());
-      } else {
+      if (!cachedMagnitudes[currentBlock].has_value()) {
         cachedMagnitudes[currentBlock] =
             computeMagnitude(fastFourierTransform(blocks[currentBlock]));
-
-        waveformVisualiser(cachedMagnitudes[currentBlock].value(),
-                           GetScreenWidth(), GetScreenHeight());
       }
+
+      waveformVisualiser(cachedMagnitudes[currentBlock].value(),
+                         GetScreenWidth(), GetScreenHeight());
+
       EndDrawing();
       currentBlock = static_cast<size_t>(currentIndex);
     }
