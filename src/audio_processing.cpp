@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <cstddef>
-#include <stdexcept>
 
 #include "read_wav.hpp"
 
