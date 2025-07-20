@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     size_t currentBlock = 0;
     float timePlayed = 0.0F;
-    std::vector<std::optional<std::vector<double>>> cachedMagnitudes(
+    std::vector<std::optional<std::vector<float>>> cachedMagnitudes(
         blocks.size());
 
     while (!WindowShouldClose() && currentBlock < cachedMagnitudes.size()) {
