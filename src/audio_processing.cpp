@@ -73,46 +73,31 @@ std::vector<std::complex<double>> discreteFourierTransform(
 
 // radix-2 cooley tukey fast fourier transform using 1024 sample
 std::vector<std::complex<float>> fastFourierTransform(
-    const std::vector<float>& sample) {
-  const size_t sampleSize = sample.size();
-  const size_t sampleSizeHalf = sampleSize / 2;
-  if ((sampleSize & (sampleSize - 1)) != 0U) {
-    throw std::runtime_error("Number is not a power of 2");
-  }
-  if (sampleSize <= 1) {
-    return {std::complex<float>(sample[0], 0.0F)};
+    const std::vector<float>& sample, size_t start, size_t step) {
+  auto subproblem = sample.size() / step;
+  if (subproblem == 1) {
+    return {std::complex<float>(sample[start], 0.0F)};
   }
 
-  std::vector<float> odd;
-  std::vector<float> even;
-
-  for (size_t i = 0; i < sampleSize; ++i) {
-    if ((i % 2) == 0) {
-      even.push_back(sample[i]);
-    } else {
-      odd.push_back(sample[i]);
-    }
-  }
-
-  auto evenVar = fastFourierTransform(even);
-  auto oddVar = fastFourierTransform(odd);
+  auto evenVar = fastFourierTransform(sample, start, step);
+  auto oddVar = fastFourierTransform(sample, start + 1, step);
 
   std::vector<std::complex<float>> twiddle;
 
   // twiddle[i] = cos(-2πi / N) + i·sin(-2πi / N), where N = sampleSizeHalf
   // This is equivalent to: twiddle[i] = exp(-2πi * i / N)
-  for (size_t i = 0; i < sampleSizeHalf; ++i) {
+  for (size_t i = 0; i < sample.size() / step; ++i) {
     const std::complex<float> contribution(
-        std::cos(-2.0F * M_PIF * (float)i / (float)sampleSize),
-        std::sin(-2.0F * M_PIF * (float)i / (float)sampleSize));
+        std::cos(-2.0F * M_PIF * (float)i / (float)sample.size()),
+        std::sin(-2.0F * M_PIF * (float)i / (float)sample.size()));
 
     twiddle.push_back(contribution);
   }
 
-  std::vector<std::complex<float>> result(sampleSize);
-  for (size_t i = 0; i < sampleSizeHalf; ++i) {
+  std::vector<std::complex<float>> result(sample.size());
+  for (size_t i = 0; i < sample.size() / step; ++i) {
     result[i] = evenVar[i] + twiddle[i] * oddVar[i];
-    result[i + sampleSizeHalf] = evenVar[i] - twiddle[i] * oddVar[i];
+    result[i + sample.size() / step] = evenVar[i] - twiddle[i] * oddVar[i];
   }
   return result;
 }
