@@ -118,17 +118,17 @@ std::vector<std::complex<double>> fastFourierTransform(
 }
 
 // Compute magnitude spectrum from Fourier Transform (DFT or FFT) result
-std::vector<double> computeMagnitude(
+std::vector<float> computeMagnitude(
     const std::vector<std::complex<double>>& fourierResult) {
   if (fourierResult.empty()) {
     return {};
   }
   // magnitude = sqrt(real^2 + imag^2)
-  std::vector<double> magnitude;
+  std::vector<float> magnitude;
   magnitude.reserve(fourierResult.size());
 
   for (const auto& val : fourierResult) {
-    magnitude.push_back(std::abs(val));
+    magnitude.push_back(static_cast<float>(std::abs(val)));
   }
   return magnitude;
 }

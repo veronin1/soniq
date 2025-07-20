@@ -12,7 +12,7 @@ std::vector<std::complex<double>> discreteFourierTransform(
     const std::vector<double>& sample);
 std::vector<std::complex<double>> fastFourierTransform(
     const std::vector<double>& sample);
-std::vector<double> computeMagnitude(
+std::vector<float> computeMagnitude(
     const std::vector<std::complex<double>>& fourierResult);
 
 #endif
