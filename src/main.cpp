@@ -1,6 +1,7 @@
 #include <raylib.h>
 
 #include <algorithm>
+#include <cstddef>
 #include <exception>
 #include <iostream>
 
@@ -23,8 +24,17 @@ int main(int argc, char* argv[]) {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     const WavFile wav = read_wav(argv[1]);
     InitAudioDevice();
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+
+    if (!IsAudioDeviceReady()) {
+      std::cerr << "Audio device not ready\n";
+      return 1;
+    }  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     const Music music = LoadMusicStream(argv[1]);
+
+    if (music.ctxData == nullptr) {
+      std::cerr << "Music failed to load\n";
+      return 1;
+    }
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     InitWindow(width, height, title);
     SetTargetFPS(targetFps);
@@ -32,21 +42,29 @@ int main(int argc, char* argv[]) {
     auto blocks = sampleToBlock(samples);
     PlayMusicStream(music);
 
+    std::vector<std::vector<double>> magnitudes;
+    magnitudes.reserve(blocks.size());
+
+    for (const auto& block : blocks) {
+      auto fftResult = fastFourierTransform(block);
+      magnitudes.push_back(computeMagnitude(fftResult));
+    }
+
     size_t currentBlock = 0;
     float timePlayed = 0.0F;
-    while (!WindowShouldClose() && currentBlock < blocks.size()) {
+
+    while (!WindowShouldClose() && currentBlock < magnitudes.size()) {
       UpdateMusicStream(music);
 
       timePlayed = GetMusicTimePlayed(music) / GetMusicTimeLength(music);
       timePlayed = std::min(timePlayed, 1.0F);
-      const float currentIndex = timePlayed * float(blocks.size());
-      auto fftResult = fastFourierTransform(blocks[currentBlock]);
-      auto mags = computeMagnitude(fftResult);
+      const float currentIndex = timePlayed * float(magnitudes.size());
       BeginDrawing();
       ClearBackground(BLACK);
-      waveformVisualiser(mags, GetScreenWidth(), GetScreenHeight());
+      waveformVisualiser(magnitudes[currentBlock], GetScreenWidth(),
+                         GetScreenHeight());
       EndDrawing();
-      currentBlock = (size_t)currentIndex;
+      currentBlock = static_cast<size_t>(currentIndex);
     }
     UnloadMusicStream(music);
     CloseAudioDevice();
