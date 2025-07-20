@@ -14,6 +14,7 @@ const size_t width = 1280;
 const size_t height = 720;
 const char* const title = "soniq";
 const int targetFps = 60;
+const size_t blockSize = 1024;
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -40,16 +41,17 @@ int main(int argc, char* argv[]) {
     InitWindow(width, height, title);
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
-    auto blocks = sampleToBlock(samples);
     PlayMusicStream(music);
+    size_t totalBlocks = (samples.size() / blockSize - 1) / blockSize;
 
     size_t currentBlock = 0;
     float timePlayed = 0.0F;
     std::vector<std::optional<std::vector<float>>> cachedMagnitudes(
-        blocks.size());
+        totalBlocks);
 
     while (!WindowShouldClose() && currentBlock < cachedMagnitudes.size()) {
       UpdateMusicStream(music);
+      auto block = getBlock(samples, currentBlock);
 
       timePlayed = GetMusicTimePlayed(music) / GetMusicTimeLength(music);
       timePlayed = std::min(timePlayed, 1.0F);
@@ -59,7 +61,7 @@ int main(int argc, char* argv[]) {
 
       if (!cachedMagnitudes[currentBlock].has_value()) {
         cachedMagnitudes[currentBlock] =
-            computeMagnitude(fastFourierTransform(blocks[currentBlock]));
+            computeMagnitude(fastFourierTransform(block));
       }
 
       waveformVisualiser(cachedMagnitudes[currentBlock].value(),
