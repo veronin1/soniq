@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <exception>
 #include <iostream>
+#include <optional>
 
 #include "audio_processing.hpp"
 #include "read_wav.hpp"
@@ -42,27 +43,30 @@ int main(int argc, char* argv[]) {
     auto blocks = sampleToBlock(samples);
     PlayMusicStream(music);
 
-    std::vector<std::vector<double>> magnitudes;
-    magnitudes.reserve(blocks.size());
-
-    for (const auto& block : blocks) {
-      auto fftResult = fastFourierTransform(block);
-      magnitudes.push_back(computeMagnitude(fftResult));
-    }
-
     size_t currentBlock = 0;
     float timePlayed = 0.0F;
+    std::vector<std::optional<std::vector<double>>> cachedMagnitudes(
+        blocks.size());
 
-    while (!WindowShouldClose() && currentBlock < magnitudes.size()) {
+    while (!WindowShouldClose() && currentBlock < cachedMagnitudes.size()) {
       UpdateMusicStream(music);
 
       timePlayed = GetMusicTimePlayed(music) / GetMusicTimeLength(music);
       timePlayed = std::min(timePlayed, 1.0F);
-      const float currentIndex = timePlayed * float(magnitudes.size());
+      const float currentIndex = timePlayed * float(cachedMagnitudes.size());
       BeginDrawing();
       ClearBackground(BLACK);
-      waveformVisualiser(magnitudes[currentBlock], GetScreenWidth(),
-                         GetScreenHeight());
+
+      if (cachedMagnitudes[currentBlock].has_value()) {
+        waveformVisualiser(cachedMagnitudes[currentBlock].value(),
+                           GetScreenWidth(), GetScreenHeight());
+      } else {
+        cachedMagnitudes[currentBlock] =
+            computeMagnitude(fastFourierTransform(blocks[currentBlock]));
+
+        waveformVisualiser(cachedMagnitudes[currentBlock].value(),
+                           GetScreenWidth(), GetScreenHeight());
+      }
       EndDrawing();
       currentBlock = static_cast<size_t>(currentIndex);
     }
