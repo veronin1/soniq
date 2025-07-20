@@ -125,7 +125,7 @@ std::vector<float> computeMagnitude(
   }
   // magnitude = sqrt(real^2 + imag^2)
   std::vector<float> magnitude;
-  magnitude.reserve(fourierResult.size() / 2);
+  magnitude.reserve(fourierResult.size());
 
   for (const auto& val : fourierResult) {
     magnitude.push_back(static_cast<float>(std::abs(val)));
