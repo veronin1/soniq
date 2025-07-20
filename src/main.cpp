@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
     PlayMusicStream(music);
-    const size_t totalBlocks = (samples.size() / blockSize - 1) / blockSize;
+    const size_t totalBlocks = samples.size() / blockSize;
 
     size_t currentBlock = 0;
     float timePlayed = 0.0F;
