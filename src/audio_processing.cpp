@@ -79,8 +79,8 @@ std::vector<std::complex<float>> fastFourierTransform(
     return {std::complex<float>(sample[start], 0.0F)};
   }
 
-  auto evenVar = fastFourierTransform(sample, start, step);
-  auto oddVar = fastFourierTransform(sample, start + 1, step);
+  auto evenVar = fastFourierTransform(sample, start, step * 2);
+  auto oddVar = fastFourierTransform(sample, start + step, step * 2);
 
   std::vector<std::complex<float>> twiddle;
 
