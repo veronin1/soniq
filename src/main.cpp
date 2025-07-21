@@ -31,8 +31,8 @@ int main(int argc, char* argv[]) {
     if (!IsAudioDeviceReady()) {
       std::cerr << "Audio device not ready\n";
       return 1;
-    }  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    const Music music = LoadMusicStream(argv[1]);
+    }
+    const Music music = LoadMusicStream(file);
 
     if (music.ctxData == nullptr) {
       std::cerr << "Music failed to load\n";
