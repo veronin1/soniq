@@ -5,6 +5,7 @@
 #include <exception>
 #include <iostream>
 #include <optional>
+#include <string>
 
 #include "audio_processing.hpp"
 #include "read_wav.hpp"
@@ -38,8 +39,13 @@ int main(int argc, char* argv[]) {
       std::cerr << "Music failed to load\n";
       return 1;
     }
+
+    const std::string path = file;
+    auto const pos = path.find_last_of('/');
+    const auto leaf = path.substr(pos + 1);
+
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    InitWindow(width, height, (title + std::string(file)).c_str());
+    InitWindow(width, height, (title + std::string(leaf)).c_str());
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
     PlayMusicStream(music);
