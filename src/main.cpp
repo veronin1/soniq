@@ -41,11 +41,14 @@ int main(int argc, char* argv[]) {
     }
 
     const std::string path = file;
-    auto const pos = path.find_last_of('/');
-    const auto leaf = path.substr(pos + 1);
+    auto const slashPos = path.find_last_of('/');
+    const auto leaf = path.substr(slashPos + 1);
+    const auto extensionPos = leaf.find_last_of('.');
+    const auto fileName = leaf.substr(0, extensionPos);
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    InitWindow(width, height, (title + std::string(leaf)).c_str());
+    InitWindow(width, height,
+               (std::string(title) + " - " + std::string(fileName)).c_str());
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
     PlayMusicStream(music);
