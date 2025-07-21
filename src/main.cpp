@@ -24,7 +24,8 @@ int main(int argc, char* argv[]) {
   }
   try {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    const WavFile wav = read_wav(argv[1]);
+    auto* file = argv[1];
+    const WavFile wav = read_wav(file);
     InitAudioDevice();
 
     if (!IsAudioDeviceReady()) {
@@ -38,7 +39,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    InitWindow(width, height, title);
+    InitWindow(width, height, (title + std::string(file)).c_str());
     SetTargetFPS(targetFps);
     auto samples = convertBytes(wav);
     PlayMusicStream(music);
