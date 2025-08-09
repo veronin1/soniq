@@ -4,12 +4,12 @@ soniq is a C++ program that plays a user-selected audio file with real-time soun
 
 ## Demo
 
-[![Watch demo video](https://img.youtube.com/vi/L6JaSroQlTQ/0.jpg)](https://youtu.be/L6JaSroQlTQ)
+[![Watch the demo video](https://img.youtube.com/vi/L6JaSroQlTQ/0.jpg)](https://youtu.be/L6JaSroQlTQ)
 
 ## Requirements
 
 -   CMake >= 3.10
--   C++17-compatible compiler (e.g. `clang++` or `g++`)
+-   C++17-compatible compiler (e.g., clang++ or g++)
 -   raylib
 
 ## Build Instructions
